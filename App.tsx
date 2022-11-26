@@ -8,13 +8,16 @@
  * @format
  */
 
-import Home from './src/pages/Home/Home';
-
+import { NavigationContainer } from '@react-navigation/native';
+import { useColorScheme } from 'react-native';
+import Navigator from './src/common/navigator';
 
 const App = () => {
 
   return (
-    <Home />
+    <NavigationContainer>
+      <Navigator />
+    </NavigationContainer>
   );
 };
 export default App;

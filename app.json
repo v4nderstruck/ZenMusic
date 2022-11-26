@@ -1,4 +1,13 @@
 {
   "name": "ZenMusic",
-  "displayName": "ZenMusic"
+  "displayName": "ZenMusic",
+  "expo": {
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "userInterfaceStyle": "automatic"
+    },
+    "android": {
+      "userInterfaceStyle": "automatic"
+    }
+  }
 }
