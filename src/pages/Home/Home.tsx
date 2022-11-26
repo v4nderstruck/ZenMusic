@@ -6,9 +6,9 @@ import TopBar from '../../common/components/TopBar';
 
 export default function Home() {
   return (
-    <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-slate-900">
+    <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
       <ScrollView>
-        <TopBar title="ZenMusic" />
+        <TopBar title="ZenMusic" username="zensayyy" />
       </ScrollView>
     </SafeAreaView>
   );

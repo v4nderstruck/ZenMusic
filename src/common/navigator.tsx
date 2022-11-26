@@ -1,19 +1,19 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 import Explore from '../pages/Explore/Explore';
 import Home from '../pages/Home/Home';
 import Library from '../pages/Library/Library';
 import Search from '../pages/Search/Search';
 import Icon from 'react-native-vector-icons/Ionicons'
+import theme from './theme_styles';
 // slate-900 "rgb(15 23 42)"
 // neutral-300 "rgb(212 212 212)" 
 
 const Tab = createBottomTabNavigator();
 export default function Navigator() {
-  const darkModeBGColor = useColorScheme() === "dark" ? "rgb(15, 23, 42)" : "rgb(212, 212, 212)";
-  const darkModeFontColor = useColorScheme() === "dark" ? "rgb(212, 212, 212)" : "rgb(15,23,42)";
-  console.log(darkModeBGColor);
+  const colorTheme = theme();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,6 +34,12 @@ export default function Navigator() {
               break;
           }
           return <Icon name={RenderIconName} color={color} size={size} />
+        },
+        tabBarStyle: {
+          backgroundColor: colorTheme.backgroundColor,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderTopWidth: 0,
         },
         headerShown: false,
       })
