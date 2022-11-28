@@ -1,7 +1,8 @@
 import { createContext, useMemo, useReducer } from "react";
-import CookieManager from "@react-native-cookies/cookies";
+import CookieManager, { CookieManagerStatic } from "@react-native-cookies/cookies";
 
 export interface AppStateType {
+  cookieStore: any,
   signIn: "NOT_SIGNED_IN" | "SIGNED_IN",
 }
 
@@ -13,6 +14,8 @@ export const AppContext = createContext();
 
 export interface AppCtxType {
   signIn: () => void;
+  getCookieStore: () => CookieManagerStatic | undefined;
+  setCookieStore: (cookies: any) => void
   getAppState: () => AppStateType | undefined;
 }
 
@@ -24,22 +27,30 @@ export default function AppContextProvider({ children }: any) {
         case 'SIGN_IN_SUCCESS':
           console.log("Update to signed in state")
           return { ...prevState, signIn: "SIGNED_IN" } as AppStateType
+        case 'UPDATE_COOKIE_STORE':
+          console.log("Updating Cookie Store")
+          return { ...prevState, cookieStore: action.payload } as AppStateType
       }
     },
     {
-      signIn: "NOT_SIGNED_IN"
+      signIn: "NOT_SIGNED_IN",
+      cookieStore: {},
     } as AppStateType
   );
 
   const appCtx: AppCtxType = {
     signIn: async () => {
       //! todo: verify sign in success 
-
       console.log("Verified Login! Navigating to App");
       dispatch({ type: "SIGN_IN_SUCCESS" });
     },
+    getCookieStore: () => {
+      return appState?.cookieStore;
+    },
+    setCookieStore: (cookies: any) => {
+      dispatch({ type: "UPDATE_COOKIE_STORE", payload: cookies })
+    },
     getAppState: () => {
-      console.log("update appstate with ", appState)
       return appState
     },
   };

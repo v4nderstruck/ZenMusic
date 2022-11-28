@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, View, Text, FlatList } from 'react-native';
+import { AppContext, AppCtxType } from '../../common/AppContextProvider';
 import TopBar from '../../common/components/TopBar';
 import SongCard from './components/SongCard';
+import { getUserName } from './data';
 
 // import theme from '../../common/theme_styles';
 
@@ -37,6 +39,16 @@ const mockRecommendedData: SongCardProbs[] = [
 ];
 
 export default function Home() {
+  const [userState, setUserState] = useState({});
+  const appCtx = useContext(AppContext) as AppCtxType;
+  useEffect(() => {
+    const fetchData = async () => {
+      const userName = await getUserName(appCtx.getCookieStore());
+      setUserState({ ...userState, username: userName });
+    };
+    fetchData();
+
+  }, [appCtx]);
   return (
     <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
       <ScrollView>
@@ -46,7 +58,7 @@ export default function Home() {
             <Text className="text-neutral-900 dark:text-slate-50 text-base font-thin">
 
               Hello <Text className="">
-                NAME
+                {userState.username !== undefined ? (userState.username) : ("Guest")}
               </Text>
             </Text>
           </View>
