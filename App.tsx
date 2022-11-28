@@ -10,14 +10,22 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
-import Navigator from './src/common/navigator';
+import AppContextProvider from './src/common/AppContextProvider';
+import RootNavigator from './src/common/RootNavigator';
+import CookieManager from '@react-native-cookies/cookies';
 
 const App = () => {
 
+  // CookieManager.clearAll(true).then(res => {
+  //   console.log("Debug: clear cash bro")
+  // })
+
   return (
-    <NavigationContainer>
-      <Navigator />
-    </NavigationContainer>
+    <AppContextProvider>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </AppContextProvider>
   );
 };
 export default App;
