@@ -39,6 +39,7 @@ function getCookies(cookie: any) {
   cookieStr += "__Secure-1PSIDCC" + cookie["__Secure-1PSIDCC"].value + "; ";
   cookieStr += "__Secure-3PSIDCC" + cookie["__Secure-3PSIDCC"].value + ";";
   console.log(cookieStr)
+  return cookieStr;
 }
 
 export async function getUserName(cookie: any) {
@@ -46,13 +47,13 @@ export async function getUserName(cookie: any) {
     `https://music.youtube.com/youtubei/v1/account/account_menu?key=${APIKEY}&prettyPrint=false`,
     {
       method: 'POST',
-      headers: {
+      headers: new Headers({
         'Referer': 'https://music.youtube.com',
         'Origin': 'https://music.youtube.com',
-        'Authorization': getAuthTokenHash(cookie),
+        'authorization': getAuthTokenHash(cookie),
         'Cookie': getCookies(cookie)
-      }
+      })
     });
   console.log(response);
-  console.log(response.text());
+  console.log(await response.json());
 }
