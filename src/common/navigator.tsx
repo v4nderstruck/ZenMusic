@@ -2,11 +2,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { View } from 'react-native';
 import Explore from '../pages/Explore/Explore';
-import Home from '../pages/Home/Home';
 import Library from '../pages/Library/Library';
 import Search from '../pages/Search/Search';
 import Icon from 'react-native-vector-icons/Ionicons'
 import theme from './theme_styles';
+import HomeNavigator from './routes/HomeNavigator';
 // slate-900 "rgb(15 23 42)"
 // neutral-300 "rgb(212 212 212)" 
 
@@ -45,7 +45,7 @@ export default function Navigator() {
       })
       }
     >
-      <Tab.Screen name='Home' component={Home} />
+      <Tab.Screen name='Home' component={HomeNavigator} />
       <Tab.Screen name="Explore" component={Explore} />
       <Tab.Screen name='Library' component={Library} />
       <Tab.Screen name='Search' component={Search} />
