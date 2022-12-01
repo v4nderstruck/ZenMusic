@@ -42,6 +42,17 @@ function getCookies(cookie: any) {
   return cookieStr;
 }
 
+const magicAPI_String = `
+{
+  "context": {
+    "client": {
+      "clientName": "WEB_REMIX",
+      "clientVersion": "1.20221128.01.00"
+    }
+  }
+}
+`;
+
 export async function getUserName(cookie: any) {
   const response = await fetch(
     `https://music.youtube.com/youtubei/v1/account/account_menu?key=${APIKEY}&prettyPrint=false`,
@@ -51,8 +62,10 @@ export async function getUserName(cookie: any) {
         'Referer': 'https://music.youtube.com',
         'Origin': 'https://music.youtube.com',
         'authorization': getAuthTokenHash(cookie),
-        'Cookie': getCookies(cookie)
-      })
+        'Cookie': getCookies(cookie),
+        'Content-Type': 'application/json'
+      }),
+      body: magicAPI_String
     });
   console.log(response);
   console.log(await response.json());

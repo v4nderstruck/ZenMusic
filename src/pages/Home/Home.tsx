@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, View, Text, FlatList } from 'react-native';
+import { AccountApi } from '../../api/accountMenu';
 import { AppContext, AppCtxType } from '../../common/AppContextProvider';
 import TopBar from '../../common/components/TopBar';
 import SongCard from './components/SongCard';
@@ -39,12 +40,13 @@ const mockRecommendedData: SongCardProbs[] = [
 ];
 
 export default function Home() {
-  const [userState, setUserState] = useState({});
+  const [userState, setUserState] = useState(new AccountApi())
   const appCtx = useContext(AppContext) as AppCtxType;
   useEffect(() => {
     const fetchData = async () => {
-      const userName = await getUserName(appCtx.getCookieStore());
-      setUserState({ ...userState, username: userName });
+      const accountAPI = new AccountApi();
+      await accountAPI.fetch(appCtx.getCookieStore()!);
+      setUserState(accountAPI);
     };
     fetchData();
 
@@ -58,7 +60,7 @@ export default function Home() {
             <Text className="text-neutral-900 dark:text-slate-50 text-base font-thin">
 
               Hello <Text className="">
-                {userState.username !== undefined ? (userState.username) : ("Guest")}
+                {userState.username}
               </Text>
             </Text>
           </View>

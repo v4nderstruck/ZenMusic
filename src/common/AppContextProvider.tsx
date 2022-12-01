@@ -2,7 +2,7 @@ import { createContext, useMemo, useReducer } from "react";
 import CookieManager, { CookieManagerStatic } from "@react-native-cookies/cookies";
 
 export interface AppStateType {
-  cookieStore: any,
+  cookieStore: any, // This is an array of cookies but I technically treat it as a string
   signIn: "NOT_SIGNED_IN" | "SIGNED_IN",
 }
 
