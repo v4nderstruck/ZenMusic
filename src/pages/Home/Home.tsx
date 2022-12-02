@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, View, Text, FlatList } from 'react-native';
-import { AccountApi } from '../../api/accountMenu';
+import { Account } from '../../api/types';
 import { AppContext, AppCtxType } from '../../common/AppContextProvider';
 import TopBar from '../../common/components/TopBar';
 import SongCard from './components/SongCard';
 import { getUserName } from './data';
+import accountProvider from '../../api/accountProvider';
+import musicShelfProvider from '../../api/musicShelfProvider';
+import { ReqContext } from '../../api/general';
 
 // import theme from '../../common/theme_styles';
 
-const mockRecommendedData: SongCardProbs[] = [
+const mockRecommendedData = [
   {
     id: "0",
     title: "Never gonna give you up",
@@ -40,13 +43,18 @@ const mockRecommendedData: SongCardProbs[] = [
 ];
 
 export default function Home() {
-  const [userState, setUserState] = useState(new AccountApi())
+  const [accountDisplay, setAccountDisplayState]: [Account, any] = useState({ username: "", pbThumbnailUrl: "" });
   const appCtx = useContext(AppContext) as AppCtxType;
   useEffect(() => {
     const fetchData = async () => {
-      const accountAPI = new AccountApi();
-      await accountAPI.fetch(appCtx.getCookieStore()!);
-      setUserState(accountAPI);
+      const ctx: ReqContext = {
+        cookies: appCtx.getCookieStore()!
+      };
+      const account = await accountProvider.fetch(ctx);
+      const musicShelf = await musicShelfProvider.fetch(ctx, "Home");
+      console.log(musicShelf);
+
+      setAccountDisplayState(account);
     };
     fetchData();
 
@@ -60,7 +68,7 @@ export default function Home() {
             <Text className="text-neutral-900 dark:text-slate-50 text-base font-thin">
 
               Hello <Text className="">
-                {userState.username}
+                {accountDisplay.username}
               </Text>
             </Text>
           </View>

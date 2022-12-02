@@ -1,4 +1,9 @@
+import { CookieManagerStatic } from '@react-native-cookies/cookies';
 import sha1 from 'crypto-js/sha1';
+
+export interface ReqContext {
+  cookies: CookieManagerStatic
+}
 
 export function getAuthToken(cookie: any) {
   const now = Date.now();

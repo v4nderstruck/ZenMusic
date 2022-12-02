@@ -8,7 +8,7 @@ Some interesting findings
   same for everyone(or at least account?) currently `AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX3`
   - Should check this overtime
 
-- minimum payload for endpoint(possibly all?) seem to be, check POSTMAN
+- minimum payload for endpoint(possibly all?) seem to be, check POSTMAN (seems to work!)
 ```
 {
   "context": {
@@ -20,3 +20,9 @@ Some interesting findings
   }
 }
 ```
+
+- Rendering Home components:
+  - about 220kB size (caching probably needed...)
+  - use in payload `"browseId": "FEmusic_home"` (also "explore") to select render
+  - also render header!
+  - `musicCarouselShelfRenderer` has `musicTwoRowItemRenderer`
