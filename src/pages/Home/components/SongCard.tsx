@@ -1,4 +1,6 @@
 import { View, Text, Image } from "react-native";
+import FastImage from "react-native-fast-image";
+import { MusicCard } from "../../../api/types";
 
 export interface SongCardProbs {
   id: String,
@@ -46,24 +48,29 @@ function compactTime(t: number): String {
 }
 
 export default function SongCard({ item, index, separators }: any) {
-  const { id, title, artist, duration, clicks } = item;
+
+  const { title, id, subtitle, thumbnailUrl } = item as MusicCard;
   return (
-    <View className="w-48 h-40 flex flex-col overflow-hidden 
+    <View className="w-64 h-44 flex flex-col overflow-hidden 
       border-0 border-solid border-slate-300 dark:border-slate-200 rounded-sm">
       <View className="h-[75%] w-full flex flex-col justify-end items-end">
-        <Image source={require("../mock/rick_astley_mock.jpeg")}
-          className="absolute w-full h-full rounded-sm"
-        />
-        <View className="bg-gray-700/60 rounded-lg p-0.5 pl-1 pr-1 m-2">
+        {thumbnailUrl ? (
+          <FastImage source={{
+            uri: thumbnailUrl
+          }}
+            className="absolute w-full h-full rounded-sm"
+          />
+        ) : (
 
-          <Text className="text-neutral-200">{compactTime(duration)}</Text>
-        </View>
+          <Image source={require("../mock/rick_astley_mock.jpeg")}
+            className="absolute w-full h-full rounded-sm"
+          />
+        )}
       </View>
       <View className="mt-2">
-        <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 25)}</Text>
+        <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 30)}</Text>
         <View className="flex flex-row justify-between w-full">
-          <Text className="text-black dark:text-neutral-200 font-thin">{compactString(artist, 15)}</Text>
-          <Text className="text-black dark:text-neutral-200 font-thin">{compactClicks(clicks)} views</Text>
+          <Text className="text-black dark:text-neutral-200 font-thin">{compactString(subtitle, 45)}</Text>
         </View>
       </View>
     </View>

@@ -44,13 +44,13 @@ async function internalFetch(ctx: ReqContext, req: ReqPayload): Promise<MusicShe
         try {
           const musicCard: MusicCard = {
             title: card.musicTwoRowItemRenderer.title.runs[0].text,
-            videoId: card.musicTwoRowItemRenderer.navigationEndpoint.watchEndpoint.videoId,
-            artist: card.musicTwoRowItemRenderer.subtitle.runs[0].text, // more precise checks on this
-            views: card.musicTwoRowItemRenderer.subtitle.runs[2].text, // more precise checks on this
-
+            id: card.musicTwoRowItemRenderer.navigationEndpoint.watchEndpoint.videoId,
+            subtitle: card.musicTwoRowItemRenderer.subtitle.runs.map((items) => items.text).join(" "), // more precise checks on this
+            thumbnailUrl: card.musicTwoRowItemRenderer.thumbnailRenderer.musicThumbnailRenderer.thumbnail.thumbnails[0].url,
           };
           musicShelf.cards.push(musicCard);
         } catch (e) {
+          console.log("Failed to parse card ", e)
           continue;
         }
       }

@@ -23,9 +23,8 @@ export interface ReqPayload {
 // MusicCard - Simple representation of a Song 
 export interface MusicCard {
   title: String,
-  videoId: String,
-  artist: String,
-  views: String,
+  id: String,
+  subtitle: String,
   thumbnailUrl?: String,
 }
 
