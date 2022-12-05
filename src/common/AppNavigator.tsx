@@ -7,6 +7,8 @@ import Search from '../pages/Search/Search';
 import Icon from 'react-native-vector-icons/Ionicons'
 import theme from './theme_styles';
 import Home from '../pages/Home/Home';
+import AppStack from './AppStack';
+import HomeNavigator from '../pages/Home/HomeNavigator';
 // slate-900 "rgb(15 23 42)"
 // neutral-300 "rgb(212 212 212)" 
 
@@ -45,7 +47,7 @@ export default function AppNavigator() {
       })
       }
     >
-      <Tab.Screen name='Home' component={Home} />
+      <Tab.Screen name='Home' component={HomeNavigator} />
       <Tab.Screen name="Explore" component={Explore} />
       <Tab.Screen name='Library' component={Library} />
       <Tab.Screen name='Search' component={Search} />

@@ -47,11 +47,12 @@ function compactTime(t: number): String {
   return `${str_min}:${str_seconds}`;
 }
 
-export default function SongCard({ item, index, separators }: any) {
+export default function SongCard({ item }: any) {
 
   const { title, id, subtitle, thumbnailUrl } = item as MusicCard;
   return (
-    <View className="w-64 h-44 flex flex-col overflow-hidden 
+    <View
+      className="w-64 h-44 flex flex-col overflow-hidden 
       border-0 border-solid border-slate-300 dark:border-slate-200 rounded-sm">
       <View className="h-[75%] w-full flex flex-col justify-end items-end">
         {thumbnailUrl ? (
