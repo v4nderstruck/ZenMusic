@@ -11,6 +11,7 @@ import { ReqContext } from '../../api/general';
 import ReactNativeConfig from '../../../react-native.config';
 import { NavigationProp } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import TrackPlayer from 'react-native-track-player';
 
 // import theme from '../../common/theme_styles';
 
@@ -98,7 +99,13 @@ export default function Home({ navigation }: HomeProps) {
                     renderItem={
                       ({ item }) => (
                         <TouchableOpacity onPress={() => {
-                          navigation.navigate("PlayerPage", item)
+                          navigation.navigate("PlayerPage", item);
+                          const trackObject = {
+                            url: `https://y.com.sb/latest_version?id=${item.id}&itag=140`,
+                            title: item.title,
+                            artist: item.subtitle,
+                          };
+                          (async () => await TrackPlayer.add([trackObject]))();
                         }}>
                           <SongCard item={item} />
                         </TouchableOpacity>

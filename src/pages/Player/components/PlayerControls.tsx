@@ -1,9 +1,30 @@
 import { Slider } from "@miblanchard/react-native-slider";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
+import TrackPlayer from "react-native-track-player";
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function PlayerControls() {
+export interface PlayerControlsProps {
+  videoId: String
+}
+
+enum playbackControlsActions {
+  ActionPlay,
+  ActionPause
+}
+
+const playbackControls = (controls: playbackControlsActions) => {
+  switch (controls) {
+    case playbackControlsActions.ActionPlay:
+      (async () => TrackPlayer.play())();
+      break;
+    case playbackControlsActions.ActionPause:
+      (async () => TrackPlayer.pause())();
+      break;
+  }
+}
+
+export default function PlayerControls({ videoId }: PlayerControlsProps) {
   const [playState, setPlayState] = useState(false);
   return (
     <View className="w-full w-full flex flex-col items-center">
@@ -21,7 +42,11 @@ export default function PlayerControls() {
           <TouchableOpacity>
             <Icon name="play-skip-back-sharp" size={36} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+
+            playbackControls(playState ? playbackControlsActions.ActionPause : playbackControlsActions.ActionPlay);
+            setPlayState(!playState);
+          }}>
             {playState ? (
               <Icon name="pause" size={42} color="white" />
             ) : (

@@ -6,7 +6,7 @@ import PlayerControls from "./components/PlayerControls";
 
 
 export default function Player({ route, navigation }: any) {
-  const { title, thumbnailUrl, subtitle } = route.params as MusicCard;
+  const { id, title, thumbnailUrl, subtitle } = route.params as MusicCard;
   return (
     <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
       <HeaderBar navigation={navigation} />

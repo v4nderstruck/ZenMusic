@@ -13,12 +13,19 @@ import { useColorScheme } from 'react-native';
 import AppContextProvider from './src/common/AppContextProvider';
 import RootNavigator from './src/common/RootNavigator';
 import CookieManager from '@react-native-cookies/cookies';
-
+import TrackPlayer from 'react-native-track-player';
+import playbackService from './src/trackPlayer/playbackService';
 const App = () => {
 
   // CookieManager.clearAll(true).then(res => {
   //   console.log("Debug: clear cash bro")
   // })
+
+  TrackPlayer.registerPlaybackService(() => playbackService);
+
+  (async () => {
+    await TrackPlayer.setupPlayer();
+  })();
 
   return (
     <AppContextProvider>
