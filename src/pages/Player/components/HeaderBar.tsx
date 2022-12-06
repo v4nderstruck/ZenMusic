@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 export interface HeaderBarProps {
   // what about adding like 
-  title: String,
   navigation: any,
 }
 
@@ -16,15 +15,12 @@ function compactString(t: String, len: number): String {
   }
 }
 
-export default function HeaderBar({ title, navigation }: HeaderBarProps) {
+export default function HeaderBar({ navigation }: HeaderBarProps) {
   return (
-    <View className="ml-3 mr-3 w-full flex flex-row justify-between items-center">
+    <View className="w-full flex flex-row justify-between items-center">
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back-circle-outline" size={42} color="white" />
+        <Icon name="chevron-back-outline" size={42} color="white" />
       </TouchableOpacity>
-      <Text className="text-neutral-900 dark:text-slate-50 text-xl font-semibold">
-        {compactString(title, 24)}
-      </Text>
       <TouchableOpacity className="mr-3">
         <Icon name="heart-outline" size={42} color="white" />
       </TouchableOpacity>

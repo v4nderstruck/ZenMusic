@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@miblanchard/react-native-slider": "^2.1.0",
     "@react-native-cookies/cookies": "^6.2.1",
     "@react-navigation/bottom-tabs": "^6.4.1",
     "@react-navigation/native": "^6.0.14",
