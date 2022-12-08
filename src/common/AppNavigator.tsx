@@ -38,6 +38,7 @@ export default function AppNavigator() {
           return <Icon name={RenderIconName} color={color} size={size} />
         },
         tabBarStyle: {
+          height: 80,
           backgroundColor: colorTheme.backgroundColor,
           elevation: 0,
           shadowOpacity: 0,

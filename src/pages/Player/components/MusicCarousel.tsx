@@ -21,7 +21,7 @@ export default function MusicCarousel() {
   const [musicCarousel, setMusicCarousel] = useState<MusicCarouselProps>();
   useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
     console.log(event);
-    const currentTrack = event.track;
+    const currentTrack = event.nextTrack;
     if (event.type === Event.PlaybackTrackChanged && currentTrack != null) {
       const track = await TrackPlayer.getTrack(currentTrack);
       console.log(track);

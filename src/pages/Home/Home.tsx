@@ -12,6 +12,7 @@ import ReactNativeConfig from '../../../react-native.config';
 import { NavigationProp } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import TrackPlayer from 'react-native-track-player';
+import TrackPlayerOverlay from '../../trackPlayer/trackPlayerOverlay';
 
 // import theme from '../../common/theme_styles';
 
@@ -43,6 +44,7 @@ export default function Home({ navigation }: HomeProps) {
 
   return (
     <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
+      <TrackPlayerOverlay />
       <ScrollView>
         <View className="h-16 w-full">
           <View className="mt-5">
