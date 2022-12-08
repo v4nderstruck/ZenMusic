@@ -15,36 +15,6 @@ import TrackPlayer from 'react-native-track-player';
 
 // import theme from '../../common/theme_styles';
 
-const mockRecommendedData = [
-  {
-    id: "0",
-    title: "Never gonna give you up",
-    artist: "Rick Astley",
-    duration: 189,
-    clicks: 10000000,
-  },
-  {
-    id: "2",
-    title: "Never gonna give you up",
-    artist: "Rick Astley",
-    duration: 3789,
-    clicks: 10000000,
-  },
-  {
-    id: "3",
-    title: "Never gonna give you up",
-    artist: "Rick Astley very very",
-    duration: 189,
-    clicks: 10000000,
-  },
-  {
-    id: "4",
-    title: "Never gonna give you up very very very very long",
-    artist: "Rick Astley",
-    duration: 189,
-    clicks: 10000000,
-  },
-];
 
 export type HomeParams = {
 };
@@ -99,13 +69,18 @@ export default function Home({ navigation }: HomeProps) {
                     renderItem={
                       ({ item }) => (
                         <TouchableOpacity onPress={() => {
-                          navigation.navigate("PlayerPage", item);
                           const trackObject = {
                             url: `https://y.com.sb/latest_version?id=${item.id}&itag=140`,
+                            artwork: item.thumbnailUrl,
                             title: item.title,
                             artist: item.subtitle,
                           };
-                          (async () => await TrackPlayer.add([trackObject]))();
+                          (async () => {
+                            TrackPlayer.reset();
+                            await TrackPlayer.add([trackObject]);
+                            await TrackPlayer.play();
+                          })();
+                          navigation.navigate("PlayerPage");
                         }}>
                           <SongCard item={item} />
                         </TouchableOpacity>

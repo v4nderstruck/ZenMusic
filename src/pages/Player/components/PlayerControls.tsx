@@ -1,8 +1,9 @@
 import { Slider } from "@miblanchard/react-native-slider";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import TrackPlayer from "react-native-track-player";
+import TrackPlayer, { Event, State, useTrackPlayerEvents } from "react-native-track-player";
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export interface PlayerControlsProps {
   videoId: String
@@ -25,7 +26,16 @@ const playbackControls = (controls: playbackControlsActions) => {
 }
 
 export default function PlayerControls({ videoId }: PlayerControlsProps) {
-  const [playState, setPlayState] = useState(false);
+  const [playState, setPlayState] = useState<boolean>();
+  useTrackPlayerEvents([Event.PlaybackState], async event => {
+    if (event.type == Event.PlaybackState) {
+      if (event.state === State.Playing)
+        setPlayState(true);
+      else
+        setPlayState(false);
+    }
+  });
+
   return (
     <View className="w-full w-full flex flex-col items-center">
       <View className="w-[90%] items-stretch">
@@ -34,18 +44,16 @@ export default function PlayerControls({ videoId }: PlayerControlsProps) {
             backgroundColor: "white"
           }} />
       </View>
-      <View className="w-[90%] flex flex-row justify-between">
+      <View className="mt-6 w-[90%] flex flex-row justify-between">
         <TouchableOpacity>
           <Icon name="ios-repeat" size={24} color="white" />
         </TouchableOpacity>
-        <View className="mt-8 flex flex-row gap-2">
+        <View className="flex flex-row gap-2">
           <TouchableOpacity>
             <Icon name="play-skip-back-sharp" size={36} color="white" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
-
             playbackControls(playState ? playbackControlsActions.ActionPause : playbackControlsActions.ActionPlay);
-            setPlayState(!playState);
           }}>
             {playState ? (
               <Icon name="pause" size={42} color="white" />
@@ -58,7 +66,7 @@ export default function PlayerControls({ videoId }: PlayerControlsProps) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-          <Icon name="add-sharp" size={24} color="white" />
+          <MaterialIcon name="playlist-add" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </View>
