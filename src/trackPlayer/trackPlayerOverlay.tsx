@@ -89,8 +89,8 @@ export default function TrackPlayerOverlay() {
 
   if (musicCard) {
     return (
-      <View className="w-full absolute bottom-0 z-[1]">
-        <View className="flex flex-row gap-2 items-center bg-black w-full">
+      <View >
+        <View className="flex flex-row gap-2 items-center w-full">
           <View>
             <Icon name="ios-musical-notes-outline" color="white" size={42} />
           </View>

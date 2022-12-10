@@ -44,7 +44,10 @@ export default function Home({ navigation }: HomeProps) {
 
   return (
     <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
-      <TrackPlayerOverlay />
+      <View className="w-full absolute bottom-0 bg-black z-[1]">
+
+        <TrackPlayerOverlay />
+      </View>
       <ScrollView>
         <View className="h-16 w-full">
           <View className="mt-5">
