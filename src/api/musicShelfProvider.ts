@@ -4,6 +4,85 @@ import { defaultReqPayloadContext, MusicCard, MusicShelf, ReqPayload } from "./t
 
 const apiEndpoint = "https://music.youtube.com/youtubei/v1/browse"
 
+function parseVideoMusicCard(card: any): MusicCard | null {
+  if ('musicTwoRowItemRenderer' in card) {
+    try {
+      const musicCard: MusicCard = {
+        endpointType: 'video',
+        displayType: 'full',
+        title: card.musicTwoRowItemRenderer.title.runs[0].text,
+        id: card.musicTwoRowItemRenderer.navigationEndpoint.watchEndpoint.videoId,
+        subtitle: card.musicTwoRowItemRenderer.subtitle.runs.map((items) => items.text).join(" "), // more precise checks on this
+        thumbnailUrl: card.musicTwoRowItemRenderer.thumbnailRenderer.musicThumbnailRenderer.thumbnail.thumbnails[0].url,
+      };
+      return musicCard;
+    } catch (e) {
+      console.log(card.musicTwoRowItemRenderer)
+      console.log("Failed to parse card ", e)
+    }
+  }
+  if ('musicResponsiveListItemRenderer' in card) {
+    // holy fucki this is uglyy
+    try {
+
+      const musicCard: MusicCard | null = {} as MusicCard;
+      musicCard.endpointType = "video";
+      musicCard.displayType = "flex";
+      musicCard.title = card.musicResponsiveListItemRenderer
+        .flexColumns[0].musicResponsiveListItemFlexColumnRenderer
+        .text.runs[0].text;
+      musicCard.id = card.musicResponsiveListItemRenderer
+        .flexColumns[0].musicResponsiveListItemFlexColumnRenderer
+        .text.runs[0].navigationEndpoint.watchEndpoint.videoId;
+      musicCard.subtitle = card.musicResponsiveListItemRenderer
+        .flexColumns.slice(1).map(
+          (items) => items.musicResponsiveListItemFlexColumnRenderer.text.runs[0].text).join("");
+      musicCard.thumbnailUrl = card.musicResponsiveListItemRenderer.thumbnail
+        .musicThumbnailRenderer.thumbnail.thumbnails[0].url;
+      return musicCard;
+    } catch (e) {
+      console.log("Failed to parse card ", e)
+    }
+
+  }
+  return null;
+
+}
+function parseMusicCard(card: any, type: 'browse' | 'video'): MusicCard | null {
+  if (type == 'browse') {
+    try {
+      const musicCard: MusicCard = {
+        endpointType: 'browse',
+        displayType: 'half',
+        title: card.musicTwoRowItemRenderer.title.runs[0].text,
+        id: card.musicTwoRowItemRenderer.navigationEndpoint.browseEndpoint.browseId,
+        subtitle: card.musicTwoRowItemRenderer.subtitle.runs.map((items) => items.text).join(" "), // more precise checks on this
+        thumbnailUrl: card.musicTwoRowItemRenderer.thumbnailRenderer.musicThumbnailRenderer.thumbnail.thumbnails[0].url,
+      };
+      return musicCard
+    } catch (e) {
+      console.log("Failed to parse card ", e)
+    }
+  }
+  if (type == 'video') {
+    return parseVideoMusicCard(card);
+  }
+  return null;
+}
+
+function touchMusicCardType(card: any): 'browse' | 'video' {
+  // must be the stupidest way to do this ahha
+  if (card.musicTwoRowItemRenderer !== undefined
+    && card.musicTwoRowItemRenderer.navigationEndpoint !== undefined
+    && card.musicTwoRowItemRenderer.navigationEndpoint.watchEndpoint !== undefined)
+    return 'video';
+  if (card.musicResponsiveListItemRenderer !== undefined)
+    return 'video';
+  // lOOOL 
+  return 'browse';
+}
+
+
 async function internalFetch(ctx: ReqContext, req: ReqPayload): Promise<MusicShelf[] | null> {
   const response = await fetch(
     `${apiEndpoint}?key=${APIKEY}&prettyPrint=false`,
@@ -41,18 +120,10 @@ async function internalFetch(ctx: ReqContext, req: ReqPayload): Promise<MusicShe
       };
 
       for (const card of shelf.musicCarouselShelfRenderer.contents) {
-        try {
-          const musicCard: MusicCard = {
-            title: card.musicTwoRowItemRenderer.title.runs[0].text,
-            id: card.musicTwoRowItemRenderer.navigationEndpoint.watchEndpoint.videoId,
-            subtitle: card.musicTwoRowItemRenderer.subtitle.runs.map((items) => items.text).join(" "), // more precise checks on this
-            thumbnailUrl: card.musicTwoRowItemRenderer.thumbnailRenderer.musicThumbnailRenderer.thumbnail.thumbnails[0].url,
-          };
+        const cardType = touchMusicCardType(card);
+        const musicCard = parseMusicCard(card, cardType);
+        if (musicCard)
           musicShelf.cards.push(musicCard);
-        } catch (e) {
-          console.log("Failed to parse card ", e)
-          continue;
-        }
       }
       musicShelfs.push(musicShelf);
     }

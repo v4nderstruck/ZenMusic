@@ -22,6 +22,8 @@ export interface ReqPayload {
 
 // MusicCard - Simple representation of a Song 
 export interface MusicCard {
+  endpointType: 'video' | 'browse',
+  displayType: 'full' | 'half' | 'flex',
   title: String,
   id: String,
   subtitle: String,
