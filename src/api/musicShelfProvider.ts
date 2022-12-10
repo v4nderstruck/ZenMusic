@@ -36,7 +36,7 @@ function parseVideoMusicCard(card: any): MusicCard | null {
         .text.runs[0].navigationEndpoint.watchEndpoint.videoId;
       musicCard.subtitle = card.musicResponsiveListItemRenderer
         .flexColumns.slice(1).map(
-          (items) => items.musicResponsiveListItemFlexColumnRenderer.text.runs[0].text).join("");
+          (items) => items.musicResponsiveListItemFlexColumnRenderer.text.runs[0].text).join(" ");
       musicCard.thumbnailUrl = card.musicResponsiveListItemRenderer.thumbnail
         .musicThumbnailRenderer.thumbnail.thumbnails[0].url;
       return musicCard;

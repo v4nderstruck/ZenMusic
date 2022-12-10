@@ -49,31 +49,85 @@ function compactTime(t: number): String {
 
 export default function SongCard({ item }: any) {
 
-  const { title, id, subtitle, thumbnailUrl } = item as MusicCard;
-  return (
-    <View
-      className="w-64 h-44 flex flex-col overflow-hidden 
-      border-0 border-solid border-slate-300 dark:border-slate-200 rounded-sm">
-      <View className="h-[75%] w-full flex flex-col justify-end items-end">
-        {thumbnailUrl ? (
-          <FastImage source={{
-            uri: thumbnailUrl
-          }}
-            className="absolute w-full h-full rounded-sm"
-          />
-        ) : (
+  const { title, subtitle, thumbnailUrl, displayType } = item as MusicCard;
+  if (displayType == 'full') {
+    return (
+      <View
+        className="w-64 h-44 flex flex-col overflow-hidden">
+        <View className="h-[75%] w-full flex flex-col justify-end items-end">
+          {thumbnailUrl ? (
+            <FastImage source={{
+              uri: thumbnailUrl
+            }}
+              className="absolute w-full h-full rounded-sm"
+            />
+          ) : (
 
-          <Image source={require("../mock/rick_astley_mock.jpeg")}
-            className="absolute w-full h-full rounded-sm"
-          />
-        )}
-      </View>
-      <View className="mt-2">
-        <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 30)}</Text>
-        <View className="flex flex-row justify-between w-full">
-          <Text className="text-black dark:text-neutral-200 font-thin">{compactString(subtitle, 45)}</Text>
+            <Image source={require("../mock/rick_astley_mock.jpeg")}
+              className="absolute w-full h-full rounded-sm"
+            />
+          )}
+        </View>
+        <View className="mt-2">
+          <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 30)}</Text>
+          <View className="flex flex-row justify-between w-full">
+            <Text className="text-black dark:text-neutral-200 font-thin">{compactString(subtitle, 45)}</Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  } else if (displayType == "half") {
+    return (
+      <View
+        className="w-44 h-44 flex flex-col overflow-hidden">
+        <View className="h-[75%] w-full flex flex-col justify-end items-end">
+          {thumbnailUrl ? (
+            <FastImage source={{
+              uri: thumbnailUrl
+            }}
+              className="absolute w-full h-full rounded-sm"
+            />
+          ) : (
+
+            <Image source={require("../mock/rick_astley_mock.jpeg")}
+              className="absolute w-full h-full rounded-sm"
+            />
+          )}
+        </View>
+        <View className="mt-2">
+          <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 18)}</Text>
+          <View className="flex flex-row justify-between w-full">
+            <Text className="text-black dark:text-neutral-200 font-thin">{compactString(subtitle, 38)}</Text>
+          </View>
+        </View>
+      </View>
+    )
+  } else if (displayType == "flex") {
+    return (
+      <View
+        className="w-44 h-16 gap-1 flex flex-row overflow-hidden justify-center content-center items-center ">
+        <View className="h-12 w-12 flex flex-col justify-end items-end">
+          {thumbnailUrl ? (
+            <FastImage source={{
+              uri: thumbnailUrl
+            }}
+              className="absolute w-full h-full rounded-sm"
+            />
+          ) : (
+
+            <Image source={require("../mock/rick_astley_mock.jpeg")}
+              className="absolute w-full h-full rounded-sm"
+            />
+          )}
+        </View>
+        <View className="">
+          <Text className="text-black dark:text-neutral-200 font-semibold">{compactString(title, 18)}</Text>
+          <View className="flex flex-row justify-between w-full">
+            <Text className="text-black dark:text-neutral-200 font-thin">{compactString(subtitle, 20)}</Text>
+          </View>
+        </View>
+      </View>
+    )
+
+  }
 }
