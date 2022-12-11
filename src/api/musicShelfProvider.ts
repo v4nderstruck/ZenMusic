@@ -82,10 +82,99 @@ function touchMusicCardType(card: any): 'browse' | 'video' {
   return 'browse';
 }
 
+async function parsePage(obj: any, freshPage: boolean): Promise<[MusicShelf[], String] | null> {
+  try {
+    // interate over shelf objects
+    let musicShelfs: MusicShelf[] = [];
+    if (freshPage) {
+      console.log("new fetch");
+      for (const shelf of obj.contents
+        .singleColumnBrowseResultsRenderer
+        .tabs[0]
+        .tabRenderer
+        .content
+        .sectionListRenderer
+        .contents) {
+        let musicShelf: MusicShelf = {
+          title: shelf.musicCarouselShelfRenderer
+            .header
+            .musicCarouselShelfBasicHeaderRenderer
+            .title
+            .runs[0]
+            .text,
+          cards: []
+        };
 
-async function internalFetch(ctx: ReqContext, req: ReqPayload): Promise<MusicShelf[] | null> {
+        for (const card of shelf.musicCarouselShelfRenderer.contents) {
+          const cardType = touchMusicCardType(card);
+          const musicCard = parseMusicCard(card, cardType);
+          if (musicCard)
+            musicShelf.cards.push(musicCard);
+        }
+        musicShelfs.push(musicShelf);
+      }
+      try {
+        const r_ctoke = obj.contents
+          .singleColumnBrowseResultsRenderer
+          .tabs[0]
+          .tabRenderer
+          .content
+          .sectionListRenderer
+          .continuations[0]
+          .nextContinuationData
+          .continuation;
+        console.log("returning ", [musicShelfs, r_ctoke])
+        return [musicShelfs, r_ctoke];
+      } catch (e) {
+        console.log("Could not find the ctoken ", e);
+      }
+    } else {
+      console.log("contiuation fetch");
+      for (const shelf of obj.continuationContents
+        .sectionListContinuation
+        .contents) {
+        let musicShelf: MusicShelf = {
+          title: shelf.musicCarouselShelfRenderer
+            .header
+            .musicCarouselShelfBasicHeaderRenderer
+            .title
+            .runs[0]
+            .text,
+          cards: []
+        };
+
+        for (const card of shelf.musicCarouselShelfRenderer.contents) {
+          const cardType = touchMusicCardType(card);
+          const musicCard = parseMusicCard(card, cardType);
+          if (musicCard)
+            musicShelf.cards.push(musicCard);
+        }
+        musicShelfs.push(musicShelf);
+      }
+      try {
+        const r_ctoke = obj.continuationContents
+          .sectionListContinuation
+          .continuations[0]
+          .nextContinuationData
+          .continuation;
+        console.log("returning ", [musicShelfs, r_ctoke])
+        return [musicShelfs, r_ctoke];
+      } catch (e) {
+        console.log("Could not find the ctoken ", e);
+      }
+    }
+    return [musicShelfs, ""];
+  } catch (error) {
+    console.log("Failed to get browse ", error);
+    return null;
+  }
+}
+
+async function internalFetch(ctx: ReqContext, req: ReqPayload, ctoken: String): Promise<[MusicShelf[], String] | null> {
+  const continuation = ctoken !== "" ? `&ctoken=${ctoken}&continuation=${ctoken}&type=next` : "";
+  console.log("fetch with ctoken ", continuation)
   const response = await fetch(
-    `${apiEndpoint}?key=${APIKEY}&prettyPrint=false`,
+    `${apiEndpoint}?key=${APIKEY}&prettyPrint=false${continuation}`,
     {
       method: 'POST',
       headers: {
@@ -98,45 +187,12 @@ async function internalFetch(ctx: ReqContext, req: ReqPayload): Promise<MusicShe
       body: JSON.stringify(req),
     }
   );
-  try {
-    const obj = await response.json();
-    // interate over shelf objects
-    let musicShelfs: MusicShelf[] = [];
-    for (const shelf of obj.contents
-      .singleColumnBrowseResultsRenderer
-      .tabs[0]
-      .tabRenderer
-      .content
-      .sectionListRenderer
-      .contents) {
-      let musicShelf: MusicShelf = {
-        title: shelf.musicCarouselShelfRenderer
-          .header
-          .musicCarouselShelfBasicHeaderRenderer
-          .title
-          .runs[0]
-          .text,
-        cards: []
-      };
-
-      for (const card of shelf.musicCarouselShelfRenderer.contents) {
-        const cardType = touchMusicCardType(card);
-        const musicCard = parseMusicCard(card, cardType);
-        if (musicCard)
-          musicShelf.cards.push(musicCard);
-      }
-      musicShelfs.push(musicShelf);
-    }
-    return musicShelfs;
-  } catch (error) {
-    console.log("Failed to get browse ", error);
-    return null;
-  }
-  return null;
+  const obj = await response.json();
+  return parsePage(obj, continuation == "")
 }
 
 export default {
-  fetch(ctx: ReqContext, tab: String): Promise<MusicShelf[] | null> {
+  fetch(ctx: ReqContext, tab: String, ctoken: String): Promise<[MusicShelf[], String] | null> {
     let reqPayload: ReqPayload;
     switch (tab) {
       case "Home":
@@ -160,6 +216,6 @@ export default {
       default:
         return new Promise(() => { return null; });
     }
-    return internalFetch(ctx, reqPayload);
+    return internalFetch(ctx, reqPayload, ctoken);
   },
 }

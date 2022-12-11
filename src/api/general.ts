@@ -7,9 +7,7 @@ export interface ReqContext {
 
 export function getAuthToken(cookie: any) {
   const now = Date.now();
-  console.log(cookie.SAPISID.value)
   const hash = `SAPISIDHASH ${now}_${sha1(now.toString() + ' ' + cookie.SAPISID.value + ' ' + 'https://music.youtube.com')}`
-  console.log(hash)
   return hash;
 }
 
@@ -28,6 +26,5 @@ export function getCookies(cookie: any) {
   cookieStr += "__Secure-3PAPISID" + cookie["__Secure-3PAPISID"].value + "; ";
   cookieStr += "__Secure-1PSIDCC" + cookie["__Secure-1PSIDCC"].value + "; ";
   cookieStr += "__Secure-3PSIDCC" + cookie["__Secure-3PSIDCC"].value + ";";
-  console.log(cookieStr)
   return cookieStr;
 }
