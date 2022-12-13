@@ -1,11 +1,11 @@
-import { Button, Text, TouchableOpacity, View } from "react-native";
-import { MusicCard } from "../../../api/types";
+import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {MusicCard} from '../../../api/types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export interface HeaderBarProps {
-  // what about adding like 
-  navigation: any,
+  // what about adding like
+  navigation: any;
 }
 
 function compactString(t: String, len: number): String {
@@ -16,7 +16,7 @@ function compactString(t: String, len: number): String {
   }
 }
 
-export default function HeaderBar({ navigation }: HeaderBarProps) {
+export default function HeaderBar({navigation}: HeaderBarProps) {
   return (
     <View className="w-full flex flex-row justify-between items-center">
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -24,8 +24,7 @@ export default function HeaderBar({ navigation }: HeaderBarProps) {
       </TouchableOpacity>
       <TouchableOpacity className="mr-3">
         <MaterialIcon name="playlist-play" size={42} color="white" />
-
       </TouchableOpacity>
     </View>
-  )
+  );
 }

@@ -1,17 +1,21 @@
-import { Slider } from "@miblanchard/react-native-slider";
-import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
-import TrackPlayer, { Event, State, useTrackPlayerEvents } from "react-native-track-player";
+import {Slider} from '@miblanchard/react-native-slider';
+import {useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import TrackPlayer, {
+  Event,
+  State,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export interface PlayerControlsProps {
-  videoId: String
+  videoId: String;
 }
 
 enum playbackControlsActions {
   ActionPlay,
-  ActionPause
+  ActionPause,
 }
 
 const playbackControls = (controls: playbackControlsActions) => {
@@ -23,26 +27,29 @@ const playbackControls = (controls: playbackControlsActions) => {
       (async () => TrackPlayer.pause())();
       break;
   }
-}
+};
 
-export default function PlayerControls({ videoId }: PlayerControlsProps) {
+export default function PlayerControls({videoId}: PlayerControlsProps) {
   const [playState, setPlayState] = useState<boolean>();
   useTrackPlayerEvents([Event.PlaybackState], async event => {
     if (event.type == Event.PlaybackState) {
-      if (event.state === State.Playing)
+      if (event.state === State.Playing) {
         setPlayState(true);
-      else
+      } else {
         setPlayState(false);
+      }
     }
   });
 
   return (
     <View className="w-full w-full flex flex-col items-center">
       <View className="w-[90%] items-stretch">
-        <Slider value={20}
+        <Slider
+          value={20}
           trackStyle={{
-            backgroundColor: "white"
-          }} />
+            backgroundColor: 'white',
+          }}
+        />
       </View>
       <View className="mt-6 w-[90%] flex flex-row justify-between">
         <TouchableOpacity>
@@ -52,9 +59,14 @@ export default function PlayerControls({ videoId }: PlayerControlsProps) {
           <TouchableOpacity>
             <Icon name="play-skip-back-sharp" size={36} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            playbackControls(playState ? playbackControlsActions.ActionPause : playbackControlsActions.ActionPlay);
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              playbackControls(
+                playState
+                  ? playbackControlsActions.ActionPause
+                  : playbackControlsActions.ActionPlay,
+              );
+            }}>
             {playState ? (
               <Icon name="pause" size={42} color="white" />
             ) : (
@@ -70,6 +82,5 @@ export default function PlayerControls({ videoId }: PlayerControlsProps) {
         </TouchableOpacity>
       </View>
     </View>
-  )
-
+  );
 }

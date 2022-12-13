@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
-import { Text, View } from "react-native"
-import FastImage from "react-native-fast-image"
-import TrackPlayer, { Event, useTrackPlayerEvents } from "react-native-track-player";
+import {useEffect, useState} from 'react';
+import {Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import TrackPlayer, {
+  Event,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
 
 function compactString(t: String, len: number): String {
   if (t.length > len) {
@@ -12,9 +15,9 @@ function compactString(t: String, len: number): String {
 }
 
 export interface MusicCarouselProps {
-  artwork: String,
-  title: String,
-  artist: String,
+  artwork: String;
+  title: String;
+  artist: String;
 }
 
 export default function MusicCarousel() {
@@ -25,11 +28,11 @@ export default function MusicCarousel() {
     if (event.type === Event.PlaybackTrackChanged && currentTrack != null) {
       const track = await TrackPlayer.getTrack(currentTrack);
       console.log(track);
-      const { title, artist, artwork } = track || {};
+      const {title, artist, artwork} = track || {};
       const mc = {
         title: title,
         artist: artist,
-        artwork: artwork
+        artwork: artwork,
       };
       setMusicCarousel(mc);
     }
@@ -39,17 +42,16 @@ export default function MusicCarousel() {
       const currentTrack = await TrackPlayer.getCurrentTrack();
       if (currentTrack != null) {
         const track = await TrackPlayer.getTrack(currentTrack);
-        const { title, artist, artwork } = track || {};
+        const {title, artist, artwork} = track || {};
         const mc = {
           title: title,
           artist: artist,
-          artwork: artwork
+          artwork: artwork,
         };
-        setMusicCarousel(mc)
+        setMusicCarousel(mc);
       }
     };
     fetchData();
-
   }, []); // inital fetch because hook not existing yet??
   if (musicCarousel) {
     console.log(musicCarousel);
@@ -72,8 +74,7 @@ export default function MusicCarousel() {
           </Text>
         </View>
       </View>
-    )
+    );
   }
-  return (<></>)
-
+  return <></>;
 }
