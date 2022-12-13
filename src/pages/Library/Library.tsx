@@ -1,8 +1,8 @@
-import {View, Text} from 'react-native';
+import { View } from 'react-native';
+
 export default function Library() {
   return (
-    <View>
-      <Text className="text-neutral-200">Explore</Text>
+    <View className='w-full h-full bg-black'>
     </View>
   );
 }

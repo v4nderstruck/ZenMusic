@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SessionIfc {
   sessionVerified: boolean;
@@ -25,4 +25,5 @@ export const sessionSlice = createSlice({
   },
 });
 
-export const {setSession, verifySession} = sessionSlice.actions;
+export const { setSession, verifySession } = sessionSlice.actions;
+export default sessionSlice;

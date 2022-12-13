@@ -7,7 +7,7 @@ export interface AppStackProps {
   main: React.FC<any>;
 }
 
-export default function AppStack(props: AppStackProps) {
+export default function AppStackCommon(props: AppStackProps) {
   return (
     <AppStackNav.Navigator
       screenOptions={{

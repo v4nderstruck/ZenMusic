@@ -1,25 +1,18 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {View} from 'react-native';
 import Explore from '../pages/Explore/Explore';
 import Library from '../pages/Library/Library';
 import Search from '../pages/Search/Search';
 import Icon from 'react-native-vector-icons/Ionicons';
-import theme from './theme_styles';
-import Home from '../pages/Home/Home';
-import AppStack from './AppStack';
 import HomeNavigator from '../pages/Home/HomeNavigator';
-// slate-900 "rgb(15 23 42)"
-// neutral-300 "rgb(212 212 212)"
 
 const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
-  const colorTheme = theme();
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ _focused, color, size }) => {
           let RenderIconName;
           switch (route.name) {
             case 'Home':
@@ -39,7 +32,7 @@ export default function AppNavigator() {
         },
         tabBarStyle: {
           height: 80,
-          backgroundColor: colorTheme.backgroundColor,
+          backgroundColor: 'black',
           elevation: 0,
           shadowOpacity: 0,
           borderTopWidth: 0,
