@@ -1,7 +1,7 @@
-import {CookieManagerStatic} from '@react-native-cookies/cookies';
-import {APIKEY} from '../common/apikey';
-import {getAuthToken, getCookies, ReqContext} from './general';
-import {Account, ReqPayload, defaultReqPayloadContext} from './types';
+import { CookieManagerStatic } from '@react-native-cookies/cookies';
+import { APIKEY } from '../common/apikey';
+import { getAuthToken, getCookies, ReqContext } from './general';
+import { Account, ReqPayload, defaultReqPayloadContext } from './types';
 
 const apiEndpoint =
   'https://music.youtube.com/youtubei/v1/account/account_menu';

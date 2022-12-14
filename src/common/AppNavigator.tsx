@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import Explore from '../pages/Explore/Explore';
 import Library from '../pages/Library/Library';
@@ -8,11 +8,10 @@ import HomeNavigator from '../pages/Home/HomeNavigator';
 
 const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
-
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ _focused, color, size }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({_focused, color, size}) => {
           let RenderIconName;
           switch (route.name) {
             case 'Home':

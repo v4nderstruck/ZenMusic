@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Player from '../pages/Player/Player';
 
 const AppStackNav = createNativeStackNavigator();

@@ -1,10 +1,10 @@
 /// <reference types="nativewind/types" />
-import {NavigationContainer} from '@react-navigation/native';
-import RootNavigator from './src/common/RootNavigator';
+import { NavigationContainer } from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
-import {Provider} from 'react-redux';
-import store from './src/States/Store';
+import { Provider } from 'react-redux';
+import store from './src/states/Store';
 import playbackService from './src/trackPlayer/playbackService';
+import RootStackNavigator from './src/routes/RootStackNavigator';
 const App = () => {
   // CookieManager.clearAll(true).then(res => {
   //   console.log("Debug: clear cash bro")
@@ -19,7 +19,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <RootNavigator />
+        <RootStackNavigator />
       </NavigationContainer>
     </Provider>
   );

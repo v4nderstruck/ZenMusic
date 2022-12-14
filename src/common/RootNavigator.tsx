@@ -1,11 +1,10 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignIn from '../pages/SignIn/SignIn';
 import AppNavigator from './AppNavigator';
 
 const RootStack = createNativeStackNavigator();
 
 export default function RootNavigator() {
-
   return (
     <RootStack.Navigator
       screenOptions={{

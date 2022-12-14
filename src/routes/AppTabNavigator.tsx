@@ -1,4 +1,3 @@
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ExploreNavigator from '../pages/Explore/ExploreNavigator';
@@ -9,10 +8,10 @@ import SettingsNavigator from '../pages/Settings/SettingsNavigator';
 const Tab = createBottomTabNavigator();
 
 export default function AppTabNavigator() {
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
         tabBarIcon: ({ focused, size }) => {
           let RenderIconName;
 
@@ -26,11 +25,11 @@ export default function AppTabNavigator() {
             case 'LibraryStackNav':
               RenderIconName = 'ios-musical-notes-outline';
               break;
-            case 'SearchStackNav':
+            case 'SettingsStackNav':
               RenderIconName = 'ios-settings-outline';
               break;
           }
-          const colorFocus = focused ? "#4F46E5" : "#C7D2FE";
+          const colorFocus = focused ? '#4F46E5' : '#C7D2FE';
           return <Icon name={RenderIconName} color={colorFocus} size={size} />;
         },
         tabBarStyle: {

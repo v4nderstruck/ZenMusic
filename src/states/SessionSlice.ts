@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface SessionIfc {
   sessionVerified: boolean;
   cookieHeader: String;
-  SAPISID: String
+  SAPISID: String;
 }
 
 const initialState: SessionIfc = {
@@ -41,16 +41,17 @@ export const sessionSlice = createSlice({
     setCookie: (state: any, action: PayloadAction<any>) => {
       state.cookieHeader = formatSessionCookie(action.payload);
       try {
-        state.SAPISID = action.payload.SAOISID.value;
+        state.SAPISID = action.payload.SAPISID.value;
       } catch (error) {
         console.log('Failed to set SAPISID cookie ', error);
       }
     },
     verifySession: state => {
-      state.sessionVerified = state.SAPISID !== '' && state.cookieHeader != '' ? true : false;
+      state.sessionVerified =
+        state.SAPISID !== '' && state.cookieHeader != '' ? true : false;
     },
   },
 });
 
-export const { setSession, verifySession } = sessionSlice.actions;
+export const { setCookie, verifySession } = sessionSlice.actions;
 export default sessionSlice;
