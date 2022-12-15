@@ -1,5 +1,5 @@
-import {APIKEY} from '../common/apikey';
-import {getAuthToken, getCookies, ReqContext} from './general';
+import { APIKEY } from '../common/apikey';
+import { getAuthToken, getCookies, ReqContext } from './general';
 import {
   defaultReqPayloadContext,
   MusicCard,

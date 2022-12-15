@@ -1,6 +1,19 @@
 import { YT_DOMAIN } from './constants';
 import sha1 from 'crypto-js/sha1';
 
+export function pickGuard<Type>(
+  obj: any,
+  selectors: String[],
+  validator: (item: any) => boolean): Type | null {
+  try {
+    return cherryPick(obj, selectors, validator);
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+
+}
+
 // pass a list of nested selectors (field name), function will traverse obj and pick the
 // value if that field checked against the type. Returns PickError if not of type or
 // not in obj. The validator lambda will be used to check the obj before return.
