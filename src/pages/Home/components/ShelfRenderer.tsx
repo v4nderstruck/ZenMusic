@@ -28,7 +28,7 @@ export default function ShelfRenderer({ shelf, renderStyle }: ShelfRendererProps
         renderItem={({ item, index, separators }) => {
           return <GenericCard item={item} />
         }}
-        ItemSeparatorComponent={() => <View className="w-5"></View>}
+        ItemSeparatorComponent={() => <View className="w-4"></View>}
       />
     )
   } else if (renderStyle === "stack") {
@@ -47,7 +47,7 @@ export default function ShelfRenderer({ shelf, renderStyle }: ShelfRendererProps
             </View>
           )
         }}
-        ItemSeparatorComponent={() => <View className="w-6"></View>}
+        ItemSeparatorComponent={() => <View className="w-5"></View>}
       />
     )
   }

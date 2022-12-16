@@ -31,9 +31,11 @@ export default function Home() {
           data={musicShelf}
           renderItem={({ item, index, separators }) => {
             return (
-              <View className='mt-4'>
+              <View className='mt-6'>
                 <Text className='text-indigo-100 font-semibold text-xl'>{item.title}</Text>
-                <ShelfRenderer shelf={item.msItem} renderStyle={item.renderStyle} />
+                <View className='mt-2'>
+                  <ShelfRenderer shelf={item.msItem} renderStyle={item.renderStyle} />
+                </View>
               </View>
             )
           }}
