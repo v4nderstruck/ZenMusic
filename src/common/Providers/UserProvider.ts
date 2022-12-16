@@ -1,10 +1,10 @@
-import { APIKEY } from '../constants';
+import {APIKEY} from '../constants';
 import {
   cherryPick,
   HttpProviderCommon,
   ProviderContext,
 } from '../ProviderCommon';
-import store, { RootState } from '../../states/Store';
+import store, {RootState} from '../../states/Store';
 
 const userEndpointUrl = `https://music.youtube.com/youtubei/v1/account/account_menu?key=${APIKEY}&prettyPrint=false`;
 const userEndpointPayload = {
@@ -12,8 +12,8 @@ const userEndpointPayload = {
     client: {
       clientName: 'WEB_REMIX',
       clientVersion: '1.20221128.01.00',
-    }
-  }
+    },
+  },
 };
 const providerCommon = new HttpProviderCommon(userEndpointUrl);
 
@@ -69,8 +69,8 @@ export default {
     };
 
     var user: User = {
-      username: ""
-    }
+      username: '',
+    };
     const obj = await providerCommon.fetchEndPoint(ctx);
     user.username = pickUsername(obj);
     return user;

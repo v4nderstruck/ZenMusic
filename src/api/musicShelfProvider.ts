@@ -1,5 +1,5 @@
-import { APIKEY } from '../common/apikey';
-import { getAuthToken, getCookies, ReqContext } from './general';
+import {APIKEY} from '../common/apikey';
+import {getAuthToken, getCookies, ReqContext} from './general';
 import {
   defaultReqPayloadContext,
   MusicCard,
@@ -44,7 +44,7 @@ function parseVideoMusicCard(card: any): MusicCard | null {
       musicCard.subtitle = card.musicResponsiveListItemRenderer.flexColumns
         .slice(1)
         .map(
-          items =>
+          (items: any) =>
             items.musicResponsiveListItemFlexColumnRenderer.text.runs[0].text,
         )
         .join(' ');

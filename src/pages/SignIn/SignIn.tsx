@@ -1,8 +1,8 @@
-import { SafeAreaView, Text, View } from 'react-native';
+import {SafeAreaView, Text, View} from 'react-native';
 import WebView from 'react-native-webview';
 import CookieManager from '@react-native-cookies/cookies';
-import { useDispatch } from 'react-redux';
-import { setCookie, verifySession } from '../../states/SessionSlice';
+import {useDispatch} from 'react-redux';
+import {setCookie, verifySession} from '../../states/SessionSlice';
 
 const HardcodedYTMLoginLink =
   'https://accounts.google.com/ServiceLogin?ltmpl=music&service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3Dhttps%253A%252F%252Fmusic.youtube.com%252F%253Fcbrd%253D1%26feature%3D__FEATURE__&hl=en-GB';
@@ -17,7 +17,7 @@ export default function SignInPage() {
       CookieManager.getAll(true).then(res => {
         webviewRef?.stopLoading();
         dispatch(setCookie(res));
-        dispatch(verifySession())
+        dispatch(verifySession());
       });
     }
   };
@@ -32,7 +32,7 @@ export default function SignInPage() {
       <WebView
         ref={ref => (webviewRef = ref)}
         cacheEnabled={false}
-        source={{ uri: HardcodedYTMLoginLink }}
+        source={{uri: HardcodedYTMLoginLink}}
         onNavigationStateChange={dispatchLogin}
       />
     </SafeAreaView>

@@ -1,7 +1,7 @@
 /// <reference types="nativewind/types" />
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './src/states/Store';
 import playbackService from './src/trackPlayer/playbackService';
 import RootStackNavigator from './src/routes/RootStackNavigator';

@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import {View} from 'react-native';
 
 export default function Explore() {
   return <View className="w-full h-full bg-black" />;

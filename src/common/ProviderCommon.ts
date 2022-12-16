@@ -1,17 +1,17 @@
-import { YT_DOMAIN } from './constants';
+import {YT_DOMAIN} from './constants';
 import sha1 from 'crypto-js/sha1';
 
 export function pickGuard<Type>(
   obj: any,
   selectors: String[],
-  validator: (item: any) => boolean): Type | null {
+  validator: (item: any) => boolean,
+): Type | null {
   try {
     return cherryPick(obj, selectors, validator);
   } catch (e) {
     console.log(e);
     return null;
   }
-
 }
 
 // pass a list of nested selectors (field name), function will traverse obj and pick the
@@ -74,9 +74,10 @@ export class HttpProviderCommon {
       },
       body: context.payload as string,
     });
-    console.log("fetch ", this.endpoint_, " returned ", res.status)
-    if (res.status != 200)
-      return null
+    console.log('fetch ', this.endpoint_, ' returned ', res.status);
+    if (res.status != 200) {
+      return null;
+    }
     return res.json();
   }
 

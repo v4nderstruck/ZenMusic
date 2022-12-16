@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,17 +6,17 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { Account, MusicShelf } from '../../api/types';
-import { AppContext, AppCtxType } from '../../common/AppContextProvider';
+import {Account, MusicShelf} from '../../api/types';
+import {AppContext, AppCtxType} from '../../common/AppContextProvider';
 import TopBar from '../../common/components/TopBar';
 import SongCard from './components/SongCard';
-import { getUserName } from './data';
+import {getUserName} from './data';
 import accountProvider from '../../api/accountProvider';
 import musicShelfProvider from '../../api/musicShelfProvider';
-import { ReqContext } from '../../api/general';
+import {ReqContext} from '../../api/general';
 import ReactNativeConfig from '../../../react-native.config';
-import { NavigationProp } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NavigationProp} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import TrackPlayer from 'react-native-track-player';
 import TrackPlayerOverlay from '../../trackPlayer/trackPlayerOverlay';
 
@@ -27,7 +27,7 @@ export type HomeParams = {};
 export type HomeProps = NativeStackScreenProps<HomeParams, 'MainPage'>;
 
 function refreshFeed(
-  { layoutMeasurement, contentOffset, contentSize }: any,
+  {layoutMeasurement, contentOffset, contentSize}: any,
   triggerContinuation: () => void,
 ) {
   const paddingToBottom = 0;
@@ -40,13 +40,13 @@ function refreshFeed(
   }
 }
 
-export default function Home({ navigation }: HomeProps) {
+export default function Home({navigation}: HomeProps) {
   const [accountDisplay, setAccountDisplayState]: [Account, any] = useState({
     username: '',
     pbThumbnailUrl: '',
   });
   const [musicShelfs, setMusicShelfs]: [MusicShelf[], any] = useState([]);
-  const [continuation, setContinuation] = useState({ token: '', fetch: 0 });
+  const [continuation, setContinuation] = useState({token: '', fetch: 0});
   const appCtx = useContext(AppContext) as AppCtxType;
   useEffect(() => {
     const fetchData = async () => {
@@ -72,13 +72,13 @@ export default function Home({ navigation }: HomeProps) {
       );
       console.log('next token ', ctoken);
       setMusicShelfs(musicShelf ? musicShelfs.concat(musicShelf) : musicShelfs);
-      setContinuation({ token: ctoken, fetch: continuation.fetch });
+      setContinuation({token: ctoken, fetch: continuation.fetch});
     };
     fetchData();
   }, [appCtx, continuation.fetch]);
 
   const triggerRefresh = () => {
-    setContinuation({ ...continuation, fetch: continuation.fetch + 1 });
+    setContinuation({...continuation, fetch: continuation.fetch + 1});
   };
 
   return (
@@ -98,11 +98,11 @@ export default function Home({ navigation }: HomeProps) {
             triggerRefresh();
           }}
           keyExtractor={item => item.title}
-          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          ItemSeparatorComponent={() => <View style={{height: 12}} />}
           showsVerticalScrollIndicator={false}
           className="w-full overflow-hidden"
           data={musicShelfs}
-          renderItem={({ item }) => {
+          renderItem={({item}) => {
             if (item.cards.length == 0) {
               return;
             }
@@ -117,7 +117,7 @@ export default function Home({ navigation }: HomeProps) {
                   <FlatList
                     horizontal
                     data={item.cards}
-                    renderItem={({ item }) => (
+                    renderItem={({item}) => (
                       <TouchableOpacity
                         onPress={() => {
                           const trackObject = {
@@ -137,7 +137,7 @@ export default function Home({ navigation }: HomeProps) {
                       </TouchableOpacity>
                     )}
                     keyExtractor={item => item.id}
-                    ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+                    ItemSeparatorComponent={() => <View style={{width: 16}} />}
                     showsHorizontalScrollIndicator={false}
                     className="h-44 overflow-hidden"
                   />

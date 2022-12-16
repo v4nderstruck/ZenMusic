@@ -1,8 +1,8 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useSelector} from 'react-redux';
 import SignInPage from '../pages/SignIn/SignIn';
 
-import { RootState } from '../states/Store';
+import {RootState} from '../states/Store';
 import AppTabNavigator from './AppTabNavigator';
 
 const RootStack = createNativeStackNavigator();
