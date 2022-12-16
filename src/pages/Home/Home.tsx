@@ -8,11 +8,11 @@ import ShelfRenderer from './components/ShelfRenderer';
 export default function Home() {
   const [user, setUser] = useState<User>({ username: '' });
   const [musicShelf, setMusicShelf] = useState<MusicShelf[]>([]);
+  const [verticalMomentum, setVerticalMomentum] = useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       const user_ = await UserProvider.fetch();
       const music_ = await MusicShelfProvider.fetch();
-      console.log(music_);
       setMusicShelf(music_);
       setUser(user_);
     };
@@ -27,6 +27,16 @@ export default function Home() {
           <Text className="text-indigo-800">{' ' + user.username}</Text>
         </Text>
         <FlatList
+          onMomentumScrollBegin={() => setVerticalMomentum(true)}
+          onEndReached={({ distanceFromEnd }) => {
+            if (verticalMomentum && distanceFromEnd <= 0) {
+              MusicShelfProvider.fetch().then(music_ => {
+                console.log(music_);
+                setMusicShelf(musicShelf.concat(music_));
+              });
+              setVerticalMomentum(false);
+            }
+          }}
           keyExtractor={(item, index) => `${item.title}`}
           data={musicShelf}
           renderItem={({ item, index, separators }) => {

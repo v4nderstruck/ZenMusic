@@ -54,8 +54,9 @@ function pickMSTitle(obj: any): String {
   return '';
 }
 
-function pickMSRenderStyle(itemList: any): 'scroll' | 'stack' {
-  if (itemList.musicResponsiveListItemRenderer !== undefined) {
+function pickMSRenderStyle(itemList: any[]): 'scroll' | 'stack' {
+  console.log(itemList)
+  if ("musicResponsiveListItemRenderer" in itemList[0]) {
     return 'stack';
   }
   return 'scroll';
@@ -225,7 +226,12 @@ function pickMSItemList(itemList: any[]): Item[] {
 }
 
 function pickContinuationToken(obj: any): String {
-  return '';
+  const cShelf: any[] = pickGuard(obj, ["continuationContents", "sectionListContinuation", "continuations"], Array.isArray) || [];
+  const ctoken: String | null = pickGuard(cShelf[0], ["nextContinuationData", "continuation"], (e) => typeof e === 'string' || e instanceof String);
+
+  const sShelf: any[] = pickGuard(obj, ["tabRenderer", "content", "sectionListRenderer", "continuations"], Array.isArray) || [];
+  const stoken: String | null = pickGuard(sShelf[0], ["nextContinuationData", "continuation"], (e) => typeof e === 'string' || e instanceof String);
+  return stoken || ctoken || "";
 }
 
 export default {
@@ -243,6 +249,7 @@ export default {
       ['contents', 'singleColumnBrowseResultsRenderer', 'tabs'],
       Array.isArray,
     );
+
     const continuationShelf: any[] | null = pickGuard(
       obj,
       ['continuationContents', 'sectionListContinuation', 'contents'],
@@ -250,7 +257,27 @@ export default {
     );
 
     const musicShelfList: MusicShelf[] = [];
-    if (newShelf) {
+    if (continuationShelf) {
+      for (const content of continuationShelf) {
+        const itemList: any[] | null = pickGuard(
+          content,
+          ['musicCarouselShelfRenderer', 'contents'],
+          Array.isArray,
+        );
+        if (itemList) {
+          const musicShelf: MusicShelf = {
+            title: pickMSTitle(content),
+            renderStyle: pickMSRenderStyle(itemList),
+            msItem: pickMSItemList(itemList),
+          };
+          musicShelfList.push(musicShelf);
+        }
+      }
+      const continuation = pickContinuationToken(obj);
+      providerCommon.updateEnpoint("ctoken", continuation);
+      providerCommon.updateEnpoint("continuation", continuation);
+      providerCommon.updateEnpoint("type", "next");
+    } else if (newShelf) {
       const contents: any[] | null = pickGuard(
         newShelf[0],
         ['tabRenderer', 'content', 'sectionListRenderer', 'contents'],
@@ -266,29 +293,17 @@ export default {
           if (itemList) {
             const musicShelf: MusicShelf = {
               title: pickMSTitle(content),
-              renderStyle: pickMSRenderStyle(content),
+              renderStyle: pickMSRenderStyle(itemList),
               msItem: pickMSItemList(itemList),
             };
             musicShelfList.push(musicShelf);
           }
         }
       }
-    } else if (continuationShelf) {
-      for (const content of continuationShelf) {
-        const itemList: any[] | null = pickGuard(
-          content,
-          ['musicCarouselShelfRenderer', 'contents'],
-          Array.isArray,
-        );
-        if (itemList) {
-          const musicShelf: MusicShelf = {
-            title: pickMSTitle(content),
-            renderStyle: pickMSRenderStyle(content),
-            msItem: pickMSItemList(itemList),
-          };
-          musicShelfList.push(musicShelf);
-        }
-      }
+      const continuation = pickContinuationToken(newShelf[0]);
+      providerCommon.updateEnpoint("ctoken", continuation)
+      providerCommon.updateEnpoint("continuation", continuation)
+      providerCommon.updateEnpoint("type", "next");
     }
     return musicShelfList;
   },

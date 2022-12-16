@@ -32,22 +32,27 @@ export default function ShelfRenderer({ shelf, renderStyle }: ShelfRendererProps
       />
     )
   } else if (renderStyle === "stack") {
+
     const stackedShelf = splitArray(shelf, 4);
     return (
       <FlatList horizontal
         showsHorizontalScrollIndicator={false}
         data={stackedShelf}
-        keyExtractor={(item, _index) => `${item.title}+${item.subtitle}`}
+        keyExtractor={(item, _index) => {
+          return item.map((value: Item) => {
+            return value.title
+          }).join(".")
+        }}
         renderItem={({ item, index, separators }) => {
           return (
             <View>
               {item.map((value: Item) => {
-                return <GenericCard item={value} mini />
+                return <GenericCard key={value.title as string} item={value} mini={true} />
               })}
             </View>
           )
         }}
-        ItemSeparatorComponent={() => <View className="w-5"></View>}
+        ItemSeparatorComponent={() => <View className="w-8"></View>}
       />
     )
   }

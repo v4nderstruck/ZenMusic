@@ -1,4 +1,4 @@
-import {YT_DOMAIN} from './constants';
+import { YT_DOMAIN } from './constants';
 import sha1 from 'crypto-js/sha1';
 
 export function pickGuard<Type>(
@@ -28,7 +28,8 @@ export function cherryPick<Type>(
     if (pObj[selector as string] !== undefined) {
       pObj = pObj[selector as string];
     } else {
-      throw new Error(`PickError: Field ${selector} does not exists`);
+      //console.log("Err: ", pObj, `Selector tree [${selectors}]`);
+      throw new Error(`PickError: Field ${selector} does not exists.`);
     }
 
     if (i == selectors.length - 1) {
@@ -58,7 +59,8 @@ export class HttpProviderCommon {
     const now = Date.now();
     const hash = `SAPISIDHASH ${now}_${sha1(
       now.toString() + ' ' + cookie + ' ' + YT_DOMAIN,
-    )}`;
+    )
+      } `;
     return hash;
   }
 
@@ -81,7 +83,8 @@ export class HttpProviderCommon {
     return res.json();
   }
 
-  updateEndpoint(endpoint: String) {
-    this.endpoint_ = endpoint;
+  updateEnpoint(key: String, value: String) {
+    if (value !== "" && key !== "")
+      this.endpoint_ = this.endpoint_ + `&${key}=${value}`;
   }
 }
