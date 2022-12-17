@@ -1,22 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import { NavigationContainer } from '@react-navigation/native';
-import { useColorScheme } from 'react-native';
-import AppContextProvider from './src/common/AppContextProvider';
-import RootNavigator from './src/common/RootNavigator';
-import CookieManager from '@react-native-cookies/cookies';
+/// <reference types="nativewind/types" />
+import {NavigationContainer} from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
+import {Provider} from 'react-redux';
+import store from './src/states/Store';
 import playbackService from './src/trackPlayer/playbackService';
+import RootStackNavigator from './src/routes/RootStackNavigator';
 const App = () => {
-
   // CookieManager.clearAll(true).then(res => {
   //   console.log("Debug: clear cash bro")
   // })
@@ -28,11 +17,11 @@ const App = () => {
   })();
 
   return (
-    <AppContextProvider>
+    <Provider store={store}>
       <NavigationContainer>
-        <RootNavigator />
+        <RootStackNavigator />
       </NavigationContainer>
-    </AppContextProvider>
+    </Provider>
   );
 };
 export default App;

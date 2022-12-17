@@ -1,13 +1,16 @@
-
-import { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import TrackPlayer, { Event, State, useTrackPlayerEvents } from 'react-native-track-player';
-import { MusicCard } from '../api/types';
+import {useEffect, useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import TrackPlayer, {
+  Event,
+  State,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
+import {MusicCard} from '../api/types';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 enum playbackControlsActions {
   ActionPlay,
-  ActionPause
+  ActionPause,
 }
 
 const playbackControls = (controls: playbackControlsActions) => {
@@ -19,7 +22,7 @@ const playbackControls = (controls: playbackControlsActions) => {
       (async () => await TrackPlayer.pause())();
       break;
   }
-}
+};
 
 function compactString(t: String, len: number): String {
   if (t.length > len) {
@@ -32,34 +35,39 @@ function compactString(t: String, len: number): String {
 export default function TrackPlayerOverlay() {
   const [musicCard, setMusicCard] = useState<MusicCard>();
   const [playState, setPlayState] = useState(false);
-  useTrackPlayerEvents([Event.PlaybackTrackChanged,
-  Event.PlaybackState,
-  Event.PlaybackError,
-  Event.PlaybackQueueEnded], async event => {
-    if (event.type == Event.PlaybackState) {
-      setPlayState(event.state === State.Playing ? true : false);
-    }
-    else if (event.type == Event.PlaybackTrackChanged && event.nextTrack != null) {
-      const currentTrack = await TrackPlayer.getTrack(event.nextTrack);
-      if (currentTrack !== undefined) {
-        const { title, artist, artwork, url } = currentTrack!;
-        const mc: MusicCard = {
-          title: compactString(title!, 34),
-          subtitle: compactString(artist!, 34),
-          thumbnailUrl: artwork!,
-          id: url!
-        };
-        console.log("Updated Overlay component", mc);
-        setMusicCard(mc);
+  useTrackPlayerEvents(
+    [
+      Event.PlaybackTrackChanged,
+      Event.PlaybackState,
+      Event.PlaybackError,
+      Event.PlaybackQueueEnded,
+    ],
+    async event => {
+      if (event.type == Event.PlaybackState) {
+        setPlayState(event.state === State.Playing ? true : false);
+      } else if (
+        event.type == Event.PlaybackTrackChanged &&
+        event.nextTrack != null
+      ) {
+        const currentTrack = await TrackPlayer.getTrack(event.nextTrack);
+        if (currentTrack !== undefined) {
+          const {title, artist, artwork, url} = currentTrack!;
+          const mc: MusicCard = {
+            title: compactString(title!, 34),
+            subtitle: compactString(artist!, 34),
+            thumbnailUrl: artwork!,
+            id: url!,
+          };
+          console.log('Updated Overlay component', mc);
+          setMusicCard(mc);
+        }
+      } else if (event.type == Event.PlaybackError) {
+        console.log(event.code, event.message);
+      } else if (event.type == Event.PlaybackQueueEnded) {
+        setMusicCard(null);
       }
-    }
-    else if (event.type == Event.PlaybackError) {
-      console.log(event.code, event.message);
-    }
-    else if (event.type == Event.PlaybackQueueEnded) {
-      setMusicCard(null);
-    }
-  });
+    },
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,14 +75,14 @@ export default function TrackPlayerOverlay() {
       if (currenTrackIndex) {
         const currentTrack = await TrackPlayer.getTrack(currenTrackIndex);
         if (currentTrack !== undefined) {
-          const { title, artist, artwork, url } = currentTrack!;
+          const {title, artist, artwork, url} = currentTrack!;
           const mc: MusicCard = {
             title: title!,
             subtitle: artist!,
             thumbnailUrl: artwork!,
-            id: url!
+            id: url!,
           };
-          console.log("Updated Overlay component", mc);
+          console.log('Updated Overlay component', mc);
           setMusicCard(mc);
         }
       }
@@ -89,7 +97,7 @@ export default function TrackPlayerOverlay() {
 
   if (musicCard) {
     return (
-      <View >
+      <View>
         <View className="flex flex-row gap-2 items-center w-full">
           <View>
             <Icon name="ios-musical-notes-outline" color="white" size={42} />
@@ -102,9 +110,14 @@ export default function TrackPlayerOverlay() {
             <TouchableOpacity>
               <Icon name="play-skip-back-sharp" size={28} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              playbackControls(playState ? playbackControlsActions.ActionPause : playbackControlsActions.ActionPlay);
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                playbackControls(
+                  playState
+                    ? playbackControlsActions.ActionPause
+                    : playbackControlsActions.ActionPlay,
+                );
+              }}>
               {playState ? (
                 <Icon name="pause" size={36} color="white" />
               ) : (
@@ -117,7 +130,7 @@ export default function TrackPlayerOverlay() {
           </View>
         </View>
       </View>
-    )
+    );
   }
-  return (<></>)
+  return <></>;
 }
