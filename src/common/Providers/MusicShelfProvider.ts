@@ -21,14 +21,14 @@ const defaultEndpointPayload = {
 const providerCommon = new HttpProviderCommon(endpointUrl);
 
 export interface ItemAction {
-  action: 'browse' | 'watch',
+  action: 'browse' | 'watch';
   browseId: String;
   watchId: String;
   playlistId: String;
 }
 
 export interface Item {
-  displayType: 'max' | 'compact',
+  displayType: 'max' | 'compact';
   artworkUrl: String;
   title: String;
   subtitle: String;
@@ -37,7 +37,7 @@ export interface Item {
 
 export interface MusicShelf {
   title: String;
-  renderStyle: 'scroll' | 'stack',
+  renderStyle: 'scroll' | 'stack';
   msItem: Item[];
 }
 
@@ -47,7 +47,12 @@ function pickMSTitle(obj: any): String {
     [
       'musicCarouselShelfRenderer',
       'header',
-      'musicCarouselShelfBasicHeaderRenderer', 'title', 'runs'], Array.isArray);
+      'musicCarouselShelfBasicHeaderRenderer',
+      'title',
+      'runs',
+    ],
+    Array.isArray,
+  );
   if (runs) {
     return runs[0].text;
   }
@@ -55,8 +60,7 @@ function pickMSTitle(obj: any): String {
 }
 
 function pickMSRenderStyle(itemList: any[]): 'scroll' | 'stack' {
-  console.log(itemList)
-  if ("musicResponsiveListItemRenderer" in itemList[0]) {
+  if ('musicResponsiveListItemRenderer' in itemList[0]) {
     return 'stack';
   }
   return 'scroll';
@@ -70,7 +74,9 @@ function pickMSAction(item: any): ItemAction {
         ['musicTwoRowItemRenderer', 'navigationEndpoint', 'watchEndpoint'],
         i => true,
       ) || pickGuard(item, ['musicResponsiveListItemRenderer'], i => true);
-    if (videoType) return 'watch';
+    if (videoType) {
+      return 'watch';
+    }
     return 'browse';
   })();
   const pickWatchId = (it: any) => {
@@ -80,13 +86,17 @@ function pickMSAction(item: any): ItemAction {
         ['musicResponsiveListItemRenderer', 'flexColumns'],
         Array.isArray,
       );
-      if (!flex) return '';
+      if (!flex) {
+        return '';
+      }
       const runs: any[] | null = pickGuard(
         flex[0],
         ['musicResponsiveListItemFlexColumnRenderer', 'text', 'runs'],
         Array.isArray,
       );
-      if (!runs) return '';
+      if (!runs) {
+        return '';
+      }
       const endpoint: String =
         pickGuard(
           runs[0],
@@ -125,8 +135,14 @@ function pickMSAction(item: any): ItemAction {
             'musicTwoRowItemRenderer',
             'navigationEndpoint',
             'browseEndpoint',
-            'browseId'], (item) => { return typeof item === 'string' || item instanceof String; }) || '' as String : '' as String,
-    watchId: actionType === 'watch' ? pickWatchId(item) : '' as String,
+            'browseId',
+          ],
+          item => {
+            return typeof item === 'string' || item instanceof String;
+          },
+        ) || ('' as String)
+        : ('' as String),
+    watchId: actionType === 'watch' ? pickWatchId(item) : ('' as String),
     playlistId: '',
   };
   return action;
@@ -145,13 +161,17 @@ function pickMSItemList(itemList: any[]): Item[] {
             ['musicResponsiveListItemRenderer', 'flexColumns'],
             Array.isArray,
           );
-          if (!flex) return '' as String;
+          if (!flex) {
+            return '' as String;
+          }
           const runs: any[] | null = pickGuard(
             flex[0],
             ['musicResponsiveListItemFlexColumnRenderer', 'text', 'runs'],
             Array.isArray,
           );
-          if (!runs) return '' as String;
+          if (!runs) {
+            return '' as String;
+          }
           return runs[0].text as String;
         })(),
         subtitle: (() => {
@@ -160,7 +180,9 @@ function pickMSItemList(itemList: any[]): Item[] {
             ['musicResponsiveListItemRenderer', 'flexColumns'],
             Array.isArray,
           );
-          if (!flex) return '' as String;
+          if (!flex) {
+            return '' as String;
+          }
           return flex
             .slice(1)
             .map(it => {
@@ -169,7 +191,9 @@ function pickMSItemList(itemList: any[]): Item[] {
                 ['musicResponsiveListItemFlexColumnRenderer', 'text', 'runs'],
                 Array.isArray,
               );
-              if (!runs) return '';
+              if (!runs) {
+                return '';
+              }
               return runs[0].text;
             })
             .join(' ') as String;
@@ -177,10 +201,18 @@ function pickMSItemList(itemList: any[]): Item[] {
         artworkUrl: (() => {
           const art: any[] | null = pickGuard(
             item,
-            ['musicResponsiveListItemRenderer', 'thumbnail', 'musicThumbnailRenderer', 'thumbnail', 'thumbnails'],
+            [
+              'musicResponsiveListItemRenderer',
+              'thumbnail',
+              'musicThumbnailRenderer',
+              'thumbnail',
+              'thumbnails',
+            ],
             Array.isArray,
           );
-          if (!art) return '' as String;
+          if (!art) {
+            return '' as String;
+          }
           return art[0].url as String;
         })(),
         action: pickMSAction(item),
@@ -196,7 +228,9 @@ function pickMSItemList(itemList: any[]): Item[] {
             ['musicTwoRowItemRenderer', 'title', 'runs'],
             Array.isArray,
           );
-          if (!runs) return '' as String;
+          if (!runs) {
+            return '' as String;
+          }
           return runs[0].text as String;
         })(),
         subtitle: (() => {
@@ -205,15 +239,26 @@ function pickMSItemList(itemList: any[]): Item[] {
             ['musicTwoRowItemRenderer', 'subtitle', 'runs'],
             Array.isArray,
           );
-          if (!runs) return '' as String;
+          if (!runs) {
+            return '' as String;
+          }
           return runs.map(it => it.text).join(' ') as String;
         })(),
         artworkUrl: (() => {
           const arts: any[] | null = pickGuard(
             item,
-            ['musicTwoRowItemRenderer', 'thumbnailRenderer', 'musicThumbnailRenderer',
-              'thumbnail', 'thumbnails'], Array.isArray);
-          if (!arts) return '' as String;
+            [
+              'musicTwoRowItemRenderer',
+              'thumbnailRenderer',
+              'musicThumbnailRenderer',
+              'thumbnail',
+              'thumbnails',
+            ],
+            Array.isArray,
+          );
+          if (!arts) {
+            return '' as String;
+          }
           return arts[0].url as String;
         })(),
         action: pickMSAction(item),
@@ -226,12 +271,30 @@ function pickMSItemList(itemList: any[]): Item[] {
 }
 
 function pickContinuationToken(obj: any): String {
-  const cShelf: any[] = pickGuard(obj, ["continuationContents", "sectionListContinuation", "continuations"], Array.isArray) || [];
-  const ctoken: String | null = pickGuard(cShelf[0], ["nextContinuationData", "continuation"], (e) => typeof e === 'string' || e instanceof String);
+  const cShelf: any[] =
+    pickGuard(
+      obj,
+      ['continuationContents', 'sectionListContinuation', 'continuations'],
+      Array.isArray,
+    ) || [];
+  const ctoken: String | null = pickGuard(
+    cShelf[0],
+    ['nextContinuationData', 'continuation'],
+    e => typeof e === 'string' || e instanceof String,
+  );
 
-  const sShelf: any[] = pickGuard(obj, ["tabRenderer", "content", "sectionListRenderer", "continuations"], Array.isArray) || [];
-  const stoken: String | null = pickGuard(sShelf[0], ["nextContinuationData", "continuation"], (e) => typeof e === 'string' || e instanceof String);
-  return stoken || ctoken || "";
+  const sShelf: any[] =
+    pickGuard(
+      obj,
+      ['tabRenderer', 'content', 'sectionListRenderer', 'continuations'],
+      Array.isArray,
+    ) || [];
+  const stoken: String | null = pickGuard(
+    sShelf[0],
+    ['nextContinuationData', 'continuation'],
+    e => typeof e === 'string' || e instanceof String,
+  );
+  return stoken || ctoken || '';
 }
 
 export default {
@@ -274,9 +337,9 @@ export default {
         }
       }
       const continuation = pickContinuationToken(obj);
-      providerCommon.updateEnpoint("ctoken", continuation);
-      providerCommon.updateEnpoint("continuation", continuation);
-      providerCommon.updateEnpoint("type", "next");
+      providerCommon.updateEnpoint('ctoken', continuation);
+      providerCommon.updateEnpoint('continuation', continuation);
+      providerCommon.updateEnpoint('type', 'next');
     } else if (newShelf) {
       const contents: any[] | null = pickGuard(
         newShelf[0],
@@ -301,9 +364,9 @@ export default {
         }
       }
       const continuation = pickContinuationToken(newShelf[0]);
-      providerCommon.updateEnpoint("ctoken", continuation)
-      providerCommon.updateEnpoint("continuation", continuation)
-      providerCommon.updateEnpoint("type", "next");
+      providerCommon.updateEnpoint('ctoken', continuation);
+      providerCommon.updateEnpoint('continuation', continuation);
+      providerCommon.updateEnpoint('type', 'next');
     }
     return musicShelfList;
   },

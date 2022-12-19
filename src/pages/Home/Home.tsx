@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, FlatList } from 'react-native';
-import MusicShelfProvider, { MusicShelf } from '../../common/Providers/MusicShelfProvider';
+import { ScrollView, SafeAreaView, View, Text, FlatList } from 'react-native';
+import MusicShelfProvider, {
+  MusicShelf,
+} from '../../common/Providers/MusicShelfProvider';
 import UserProvider, { User } from '../../common/Providers/UserProvider';
-import GenericCard from './components/GenericCard';
+import TrackPlayerOverlay from '../../trackPlayer/TrackPlayerOverlay';
 import ShelfRenderer from './components/ShelfRenderer';
 
 export default function Home() {
@@ -22,11 +24,20 @@ export default function Home() {
   return (
     <SafeAreaView className="w-full h-full bg-black">
       <View className="w-full h-full bg-black">
-        <Text className="text-2xl font-bold text-neutral-200">
-          Hello
-          <Text className="text-indigo-800">{' ' + user.username}</Text>
-        </Text>
+        <View className='absolute bottom-0 left-0 bg-black pt-2 w-full z-10'>
+          <TrackPlayerOverlay />
+        </View>
         <FlatList
+          ListHeaderComponent={() => {
+            return (
+              <View>
+                <Text className="text-2xl font-bold text-neutral-200">
+                  Hello
+                  <Text className="text-indigo-800">{' ' + user.username}</Text>
+                </Text>
+              </View>
+            );
+          }}
           onMomentumScrollBegin={() => setVerticalMomentum(true)}
           onEndReached={({ distanceFromEnd }) => {
             if (verticalMomentum && distanceFromEnd <= 0) {
@@ -37,17 +48,22 @@ export default function Home() {
               setVerticalMomentum(false);
             }
           }}
-          keyExtractor={(item, index) => `${item.title}`}
+          keyExtractor={(item) => `${item.title}`}
           data={musicShelf}
-          renderItem={({ item, index, separators }) => {
+          renderItem={({ item }) => {
             return (
-              <View className='mt-6'>
-                <Text className='text-indigo-100 font-semibold text-xl'>{item.title}</Text>
-                <View className='mt-2'>
-                  <ShelfRenderer shelf={item.msItem} renderStyle={item.renderStyle} />
+              <View className="mt-6">
+                <Text className="text-indigo-100 font-semibold text-xl">
+                  {item.title}
+                </Text>
+                <View className="mt-2">
+                  <ShelfRenderer
+                    shelf={item.msItem}
+                    renderStyle={item.renderStyle}
+                  />
                 </View>
               </View>
-            )
+            );
           }}
         />
       </View>

@@ -1,6 +1,6 @@
-import {Slider} from '@miblanchard/react-native-slider';
-import {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import { Slider } from '@miblanchard/react-native-slider';
+import { useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import TrackPlayer, {
   Event,
   State,
@@ -8,10 +8,6 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-
-export interface PlayerControlsProps {
-  videoId: String;
-}
 
 enum playbackControlsActions {
   ActionPlay,
@@ -29,7 +25,7 @@ const playbackControls = (controls: playbackControlsActions) => {
   }
 };
 
-export default function PlayerControls({videoId}: PlayerControlsProps) {
+export default function PlayerControls() {
   const [playState, setPlayState] = useState<boolean>();
   useTrackPlayerEvents([Event.PlaybackState], async event => {
     if (event.type == Event.PlaybackState) {
@@ -42,7 +38,7 @@ export default function PlayerControls({videoId}: PlayerControlsProps) {
   });
 
   return (
-    <View className="w-full w-full flex flex-col items-center">
+    <View className="w-full flex flex-col items-center">
       <View className="w-[90%] items-stretch">
         <Slider
           value={20}

@@ -1,20 +1,12 @@
-import {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import TrackPlayer, {
   Event,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 
-function compactString(t: String, len: number): String {
-  if (t.length > len) {
-    return `${t.slice(0, len)}...`;
-  } else {
-    return t;
-  }
-}
-
-export interface MusicCarouselProps {
+interface MusicCarouselProps {
   artwork: String;
   title: String;
   artist: String;
@@ -28,11 +20,11 @@ export default function MusicCarousel() {
     if (event.type === Event.PlaybackTrackChanged && currentTrack != null) {
       const track = await TrackPlayer.getTrack(currentTrack);
       console.log(track);
-      const {title, artist, artwork} = track || {};
+      const { title, artist, artwork } = track || {};
       const mc = {
-        title: title,
-        artist: artist,
-        artwork: artwork,
+        title: title || "",
+        artist: artist || "",
+        artwork: artwork?.toString() || "",
       };
       setMusicCarousel(mc);
     }
@@ -42,17 +34,19 @@ export default function MusicCarousel() {
       const currentTrack = await TrackPlayer.getCurrentTrack();
       if (currentTrack != null) {
         const track = await TrackPlayer.getTrack(currentTrack);
-        const {title, artist, artwork} = track || {};
+        console.log(track);
+        const { title, artist, artwork } = track || {};
         const mc = {
-          title: title,
-          artist: artist,
-          artwork: artwork,
+          title: title || "",
+          artist: artist || "",
+          artwork: artwork?.toString() || "",
         };
         setMusicCarousel(mc);
       }
     };
     fetchData();
   }, []); // inital fetch because hook not existing yet??
+
   if (musicCarousel) {
     console.log(musicCarousel);
     return (
@@ -63,14 +57,14 @@ export default function MusicCarousel() {
             uri: `${musicCarousel.artwork}`,
           }}
         />
-        <View className="mt-4">
+        <View className="mt-4 overflow-hidden">
           <Text className="text-black dark:text-neutral-200 font-semibold">
-            {compactString(musicCarousel.title, 45)}
+            {musicCarousel.title}
           </Text>
         </View>
-        <View className="mt-1">
+        <View className="mt-1 overflow-hidden">
           <Text className="text-black dark:text-neutral-200 font-thin">
-            {compactString(musicCarousel.artist, 50)}
+            {musicCarousel.artist}
           </Text>
         </View>
       </View>

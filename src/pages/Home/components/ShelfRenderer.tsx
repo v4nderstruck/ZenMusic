@@ -1,10 +1,10 @@
-import { FlatList, View } from "react-native";
-import { Item } from "../../../common/Providers/MusicShelfProvider";
-import GenericCard from "./GenericCard";
+import { FlatList, View } from 'react-native';
+import { Item } from '../../../common/Providers/MusicShelfProvider';
+import GenericCard from './GenericCard';
 
 export interface ShelfRendererProps {
-  shelf: Item[]
-  renderStyle: "scroll" | "stack"
+  shelf: Item[];
+  renderStyle: 'scroll' | 'stack'
 }
 
 function splitArray(array: any[], i: number): any[] {
@@ -18,43 +18,56 @@ function splitArray(array: any[], i: number): any[] {
   }, []);
 }
 
-export default function ShelfRenderer({ shelf, renderStyle }: ShelfRendererProps) {
-  if (renderStyle === "scroll") {
+export default function ShelfRenderer({
+  shelf,
+  renderStyle,
+}: ShelfRendererProps) {
+  if (renderStyle === 'scroll') {
     return (
-      <FlatList horizontal
+      <FlatList
+        horizontal
         showsHorizontalScrollIndicator={false}
         data={shelf}
         keyExtractor={(item, _index) => `${item.title}+${item.subtitle}`}
-        renderItem={({ item, index, separators }) => {
-          return <GenericCard item={item} />
+        renderItem={({ item }) => {
+          return <GenericCard item={item} />;
         }}
-        ItemSeparatorComponent={() => <View className="w-4"></View>}
+        ItemSeparatorComponent={() => <View className="w-4" />}
       />
-    )
-  } else if (renderStyle === "stack") {
+    );
+  } else if (renderStyle === 'stack') {
 
     const stackedShelf = splitArray(shelf, 4);
     return (
-      <FlatList horizontal
+      <FlatList
+        horizontal
         showsHorizontalScrollIndicator={false}
         data={stackedShelf}
         keyExtractor={(item, _index) => {
-          return item.map((value: Item) => {
-            return value.title
-          }).join(".")
+          return item
+            .map((value: Item) => {
+              return value.title;
+            })
+            .join('.');
         }}
         renderItem={({ item, index, separators }) => {
           return (
             <View>
               {item.map((value: Item) => {
-                return <GenericCard key={value.title as string} item={value} mini={true} />
+                return (
+                  <GenericCard
+                    key={value.title as string}
+                    item={value}
+                    mini={true}
+                  />
+                );
               })}
             </View>
-          )
+          );
         }}
-        ItemSeparatorComponent={() => <View className="w-8"></View>}
+        ItemSeparatorComponent={() => <View className="w-8" />}
       />
-    )
+    );
   }
-  return <></>
+  return <></>;
 }
