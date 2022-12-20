@@ -16,15 +16,23 @@ interface TrackItem {
 enum playbackControlsActions {
   ActionPlay,
   ActionPause,
+  ActionSkip,
+  ActionSkipPrev,
 }
 
 const playbackControls = (controls: playbackControlsActions) => {
   switch (controls) {
     case playbackControlsActions.ActionPlay:
-      (async () => await TrackPlayer.play())();
+      TrackPlayer.play();
       break;
     case playbackControlsActions.ActionPause:
-      (async () => await TrackPlayer.pause())();
+      TrackPlayer.pause();
+      break;
+    case playbackControlsActions.ActionSkip:
+      TrackPlayer.skipToNext();
+      break;
+    case playbackControlsActions.ActionSkipPrev:
+      TrackPlayer.skipToPrevious();
       break;
   }
 };
@@ -44,9 +52,9 @@ export default function TrackPlayerOverlay() {
         setPlayState(event.state === State.Playing ? true : false);
       } else if (
         event.type == Event.PlaybackTrackChanged &&
-        event.track != null
+        event.nextTrack != null
       ) {
-        const currentTrack = await TrackPlayer.getTrack(event.track);
+        const currentTrack = await TrackPlayer.getTrack(event.nextTrack);
         if (currentTrack !== undefined) {
           const { title, artist, artwork, url } = currentTrack!;
           const mc: TrackItem = {
@@ -98,12 +106,14 @@ export default function TrackPlayerOverlay() {
         <View>
           <Icon name="ios-musical-notes-outline" color="white" size={42} />
         </View>
-        <View className="w-full overflow-hidden flex flex-col">
-          <Text className="text-neutral-100">{musicCard.title}</Text>
-          <Text className="text-neutral-100">{musicCard.artist}</Text>
+        <View className="w-[60%] overflow-hidden flex flex-col">
+          <Text className="text-neutral-100 font-semibold" numberOfLines={1}>{musicCard.title}</Text>
+          <Text className="text-gray-400" numberOfLines={1}>{musicCard.artist}</Text>
         </View>
         <View className="absolute right-0 flex flex-row items-center">
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => playbackControls(playbackControlsActions.ActionSkipPrev)}
+          >
             <Icon name="play-skip-back-sharp" size={28} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -120,7 +130,9 @@ export default function TrackPlayerOverlay() {
               <Icon name="play" size={36} color="white" />
             )}
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => playbackControls(playbackControlsActions.ActionSkip)}
+          >
             <Icon name="play-skip-forward-sharp" size={28} color="white" />
           </TouchableOpacity>
         </View>

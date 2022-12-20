@@ -12,15 +12,23 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 enum playbackControlsActions {
   ActionPlay,
   ActionPause,
+  ActionSkip,
+  ActionSkipPrev,
 }
 
 const playbackControls = (controls: playbackControlsActions) => {
   switch (controls) {
     case playbackControlsActions.ActionPlay:
-      (async () => TrackPlayer.play())();
+      TrackPlayer.play();
       break;
     case playbackControlsActions.ActionPause:
-      (async () => TrackPlayer.pause())();
+      TrackPlayer.pause();
+      break;
+    case playbackControlsActions.ActionSkip:
+      TrackPlayer.skipToNext();
+      break;
+    case playbackControlsActions.ActionSkipPrev:
+      TrackPlayer.skipToPrevious();
       break;
   }
 };
@@ -52,7 +60,9 @@ export default function PlayerControls() {
           <Icon name="ios-repeat" size={24} color="white" />
         </TouchableOpacity>
         <View className="flex flex-row gap-2">
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => playbackControls(playbackControlsActions.ActionSkipPrev)}
+          >
             <Icon name="play-skip-back-sharp" size={36} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -69,7 +79,9 @@ export default function PlayerControls() {
               <Icon name="play" size={42} color="white" />
             )}
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => playbackControls(playbackControlsActions.ActionSkip)}
+          >
             <Icon name="play-skip-forward-sharp" size={36} color="white" />
           </TouchableOpacity>
         </View>

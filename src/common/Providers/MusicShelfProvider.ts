@@ -125,6 +125,7 @@ function pickMSAction(item: any): ItemAction {
     }
     return '';
   };
+
   const action: ItemAction = {
     action: actionType,
     browseId:
