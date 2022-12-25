@@ -4,7 +4,8 @@ import MusicShelfProvider, {
   MusicShelf,
 } from '../../common/Providers/MusicShelfProvider';
 import UserProvider, { User } from '../../common/Providers/UserProvider';
-import TrackPlayerOverlay from '../../trackPlayer/TrackPlayerOverlay';
+import TrackPlayerOverlay from '../../trackPlayer/trackPlayerOverlay';
+import QuickSearch from './components/QuickSearch';
 import ShelfRenderer from './components/ShelfRenderer';
 
 export default function Home() {
@@ -30,14 +31,18 @@ export default function Home() {
         <FlatList
           ListHeaderComponent={() => {
             return (
-              <View>
+              <View className='relative z-50'>
                 <Text className="text-2xl font-bold text-neutral-200">
                   Hello
                   <Text className="text-indigo-800">{' ' + user.username}</Text>
                 </Text>
+                <View className='relative z-50' >
+                  <QuickSearch />
+                </View>
               </View>
             );
           }}
+          ListHeaderComponentStyle={{ zIndex: 99 }}
           onMomentumScrollBegin={() => setVerticalMomentum(true)}
           onEndReached={({ distanceFromEnd }) => {
             if (verticalMomentum && distanceFromEnd <= 0) {
@@ -52,7 +57,7 @@ export default function Home() {
           data={musicShelf}
           renderItem={({ item }) => {
             return (
-              <View className="mt-6">
+              <View className="relative z-[5] mt-6">
                 <Text className="text-indigo-100 font-semibold text-xl">
                   {item.title}
                 </Text>
