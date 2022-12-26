@@ -40,6 +40,7 @@ export default function ShelfRenderer({
     const stackedShelf = splitArray(shelf, 4);
     return (
       <FlatList
+        style={{ zIndex: 9 }}
         horizontal
         showsHorizontalScrollIndicator={false}
         data={stackedShelf}
@@ -56,7 +57,7 @@ export default function ShelfRenderer({
               {item.map((value: Item) => {
                 return (
                   <GenericCard
-                    key={value.title as string}
+                    key={value.artworkUrl as string}
                     item={value}
                     mini={true}
                   />

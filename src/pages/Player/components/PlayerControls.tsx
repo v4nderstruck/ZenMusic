@@ -1,5 +1,5 @@
 import { Slider } from '@miblanchard/react-native-slider';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import TrackPlayer, {
   Event,
@@ -44,6 +44,15 @@ export default function PlayerControls() {
       }
     }
   });
+  useEffect(() => {
+    const getPlayer = async () => {
+      const currentPlayerState = await TrackPlayer.getState();
+      if (currentPlayerState) {
+        setPlayState(currentPlayerState == State.Playing ? true : false);
+      }
+    }
+    getPlayer()
+  }, [])
 
   return (
     <View className="w-full flex flex-col items-center">

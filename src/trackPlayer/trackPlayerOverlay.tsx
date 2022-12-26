@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { NavigationContext } from '@react-navigation/native';
+import { useContext, useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import TrackPlayer, {
   Event,
@@ -40,6 +41,7 @@ const playbackControls = (controls: playbackControlsActions) => {
 export default function TrackPlayerOverlay() {
   const [musicCard, setMusicCard] = useState<TrackItem>();
   const [playState, setPlayState] = useState(false);
+  const navigation = useContext(NavigationContext);
   useTrackPlayerEvents(
     [
       Event.PlaybackTrackChanged,
@@ -107,8 +109,14 @@ export default function TrackPlayerOverlay() {
           <Icon name="ios-musical-notes-outline" color="white" size={42} />
         </View>
         <View className="w-[60%] overflow-hidden flex flex-col">
-          <Text className="text-neutral-100 font-semibold" numberOfLines={1}>{musicCard.title}</Text>
-          <Text className="text-gray-400" numberOfLines={1}>{musicCard.artist}</Text>
+          <TouchableOpacity onPress={
+            () => {
+              navigation?.navigate("PlayerPage")
+            }
+          }>
+            <Text className="text-neutral-100 font-semibold" numberOfLines={1}>{musicCard.title}</Text>
+            <Text className="text-gray-400" numberOfLines={1}>{musicCard.artist}</Text>
+          </TouchableOpacity>
         </View>
         <View className="absolute right-0 flex flex-row items-center">
           <TouchableOpacity
