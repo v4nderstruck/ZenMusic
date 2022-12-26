@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const autocompleteStyles = StyleSheet.create({
   container: {
@@ -33,6 +34,10 @@ const selectItemHandler = (item: any) => {
   console.log(item)
 }
 
+const submitHandler = ({ nativeEvent }: any) => {
+  console.log(nativeEvent.text)
+}
+
 export default function QuickSearch() {
 
   return (
@@ -41,10 +46,10 @@ export default function QuickSearch() {
       < View className="relative w-full z-50 mt-2" >
         <AutocompleteDropdown
           onSelectItem={selectItemHandler}
+          onSubmit={submitHandler}
           inputContainerStyle={autocompleteStyles.container}
           suggestionsListContainerStyle={autocompleteStyles.suggestionsListContainer}
           suggestionsListTextStyle={autocompleteStyles.suggestionsListText}
-          showChevron={false}
           dataSet={data}
           renderItem={(item) => (
             <Text className="text-gray-400 p-2">
@@ -66,6 +71,7 @@ export default function QuickSearch() {
               color: "rgb(212,212,216)",
             },
           }}
+          showChevron={false}
         />
       </View >
     </View >
