@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
@@ -38,13 +38,24 @@ const playbackControls = (controls: playbackControlsActions) => {
 export default function PlayerControls() {
   const playState = usePlaybackState();
   const [duration, setDuration] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      const index = await TrackPlayer.getCurrentTrack();
+      const track = index !== null ? await TrackPlayer.getTrack(index) : null;
+      console.log('init track', index, track);
+      if (track) {
+        console.log('init track', track.duration);
+        setDuration(track.duration || 0);
+      }
+    };
+    fetchData();
+  }, []);
   useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
     if (
       event.type === Event.PlaybackTrackChanged &&
       event.nextTrack != null &&
       event.nextTrack !== undefined
     ) {
-      console.log('event playercontrols', event.nextTrack);
       const track = await TrackPlayer.getTrack(event.nextTrack);
       const trackDuration = track
         ? track.duration || Number.MAX_VALUE
