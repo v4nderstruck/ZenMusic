@@ -75,7 +75,6 @@ export class HttpProviderCommon {
       },
       body: context.payload as string,
     });
-    console.log('fetch ', this.endpoint_, ' returned ', res.status);
     if (res.status !== 200) {
       return null;
     }

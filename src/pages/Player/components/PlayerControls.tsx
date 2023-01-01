@@ -1,9 +1,15 @@
-import React from 'react';
-import {Slider} from '@miblanchard/react-native-slider';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
+import TrackPlayer, {
+  Event,
+  State,
+  usePlaybackState,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import PlayerProgress from './PlayerProgress';
 
 enum playbackControlsActions {
   ActionPlay,
@@ -31,16 +37,25 @@ const playbackControls = (controls: playbackControlsActions) => {
 
 export default function PlayerControls() {
   const playState = usePlaybackState();
-
+  const [duration, setDuration] = useState(0);
+  useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
+    if (
+      event.type === Event.PlaybackTrackChanged &&
+      event.nextTrack != null &&
+      event.nextTrack !== undefined
+    ) {
+      console.log('event playercontrols', event.nextTrack);
+      const track = await TrackPlayer.getTrack(event.nextTrack);
+      const trackDuration = track
+        ? track.duration || Number.MAX_VALUE
+        : Number.MAX_VALUE;
+      setDuration(trackDuration);
+    }
+  });
   return (
     <View className="w-full flex flex-col items-center">
-      <View className="w-[90%] items-stretch">
-        <Slider
-          value={20}
-          trackStyle={{
-            backgroundColor: 'white',
-          }}
-        />
+      <View className="w-[90%] flex items-stretch">
+        <PlayerProgress duration={duration} />
       </View>
       <View className="mt-6 w-[90%] flex flex-row justify-between">
         <TouchableOpacity>
