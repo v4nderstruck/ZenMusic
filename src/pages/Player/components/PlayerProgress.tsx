@@ -19,7 +19,9 @@ const progressControls = (value: number | number[]) => {
 const toTimeFormat = (time: number): string => {
   const minutes = Math.floor(time / 60);
   const seconds = time - minutes * 60;
-  return `${minutes === 0 ? '-' : minutes}:${seconds}`;
+  return `${minutes === 0 ? '-' : minutes}:${
+    seconds < 10 ? '0' + seconds.toString() : seconds
+  }`;
 };
 
 export default function PlayerProgress({duration}: PlayerProgressProps) {
