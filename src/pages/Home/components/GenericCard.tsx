@@ -25,7 +25,6 @@ function clickHandler(item: Item, navigation: any) {
         ItemInfoProvider.setWatchId(item.action.watchId as string);
         upcoming = await ItemInfoProvider.fetch();
         if (upcoming !== null) {
-          console.log('CLICK_HANDLER no playlist id Found');
           const trackItem = await TrackProvider.fetch(item);
           if (trackItem == null) {
             return;
