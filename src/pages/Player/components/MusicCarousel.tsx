@@ -55,12 +55,16 @@ export default function MusicCarousel() {
           }}
         />
         <View className="mt-4 overflow-hidden">
-          <Text className="text-black dark:text-neutral-200 font-semibold">
+          <Text
+            numberOfLines={1}
+            className="text-black dark:text-neutral-200 font-semibold">
             {musicCarousel.title}
           </Text>
         </View>
         <View className="mt-1 overflow-hidden">
-          <Text className="text-black dark:text-neutral-200 font-thin">
+          <Text
+            numberOfLines={1}
+            className="text-black dark:text-neutral-200 font-thin">
             {musicCarousel.artist}
           </Text>
         </View>
