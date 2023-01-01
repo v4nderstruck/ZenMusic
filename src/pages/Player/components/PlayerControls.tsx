@@ -1,6 +1,7 @@
-import { Slider } from '@miblanchard/react-native-slider';
-import { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import {Slider} from '@miblanchard/react-native-slider';
+import {useEffect, useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
   State,
@@ -36,7 +37,7 @@ const playbackControls = (controls: playbackControlsActions) => {
 export default function PlayerControls() {
   const [playState, setPlayState] = useState<boolean>();
   useTrackPlayerEvents([Event.PlaybackState], async event => {
-    if (event.type == Event.PlaybackState) {
+    if (event.type === Event.PlaybackState) {
       if (event.state === State.Playing) {
         setPlayState(true);
       } else {
@@ -48,11 +49,11 @@ export default function PlayerControls() {
     const getPlayer = async () => {
       const currentPlayerState = await TrackPlayer.getState();
       if (currentPlayerState) {
-        setPlayState(currentPlayerState == State.Playing ? true : false);
+        setPlayState(currentPlayerState === State.Playing ? true : false);
       }
-    }
-    getPlayer()
-  }, [])
+    };
+    getPlayer();
+  }, []);
 
   return (
     <View className="w-full flex flex-col items-center">
@@ -70,8 +71,9 @@ export default function PlayerControls() {
         </TouchableOpacity>
         <View className="flex flex-row gap-2">
           <TouchableOpacity
-            onPress={() => playbackControls(playbackControlsActions.ActionSkipPrev)}
-          >
+            onPress={() =>
+              playbackControls(playbackControlsActions.ActionSkipPrev)
+            }>
             <Icon name="play-skip-back-sharp" size={36} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -89,8 +91,9 @@ export default function PlayerControls() {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => playbackControls(playbackControlsActions.ActionSkip)}
-          >
+            onPress={() =>
+              playbackControls(playbackControlsActions.ActionSkip)
+            }>
             <Icon name="play-skip-forward-sharp" size={36} color="white" />
           </TouchableOpacity>
         </View>

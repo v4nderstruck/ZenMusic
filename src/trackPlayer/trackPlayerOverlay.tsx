@@ -1,6 +1,6 @@
-import { NavigationContext } from '@react-navigation/native';
-import { useContext, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import {NavigationContext} from '@react-navigation/native';
+import {useContext, useEffect, useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
   State,
@@ -9,10 +9,10 @@ import TrackPlayer, {
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface TrackItem {
-  title: String,
-  artist: String,
-  artworkUrl: String,
-  watchUrl: String,
+  title: String;
+  artist: String;
+  artworkUrl: String;
+  watchUrl: String;
 }
 enum playbackControlsActions {
   ActionPlay,
@@ -50,27 +50,27 @@ export default function TrackPlayerOverlay() {
       Event.PlaybackQueueEnded,
     ],
     async event => {
-      if (event.type == Event.PlaybackState) {
+      if (event.type === Event.PlaybackState) {
         setPlayState(event.state === State.Playing ? true : false);
       } else if (
-        event.type == Event.PlaybackTrackChanged &&
+        event.type === Event.PlaybackTrackChanged &&
         event.nextTrack != null
       ) {
         const currentTrack = await TrackPlayer.getTrack(event.nextTrack);
         if (currentTrack !== undefined) {
-          const { title, artist, artwork, url } = currentTrack!;
+          const {title, artist, artwork, url} = currentTrack!;
           const mc: TrackItem = {
-            title: title || "",
-            artist: artist || "",
-            artworkUrl: artwork?.toString() || "",
-            watchUrl: url.toString() || "",
+            title: title || '',
+            artist: artist || '',
+            artworkUrl: artwork?.toString() || '',
+            watchUrl: url.toString() || '',
           };
-          console.log("trackoverlay ", mc);
+          console.log('trackoverlay ', mc);
           setMusicCard(mc);
         }
-      } else if (event.type == Event.PlaybackError) {
-        console.log(event.code, event.message);
-      } else if (event.type == Event.PlaybackQueueEnded) {
+      } else if (event.type === Event.PlaybackError) {
+        console.log('Playbackerror', event.code, event.message);
+      } else if (event.type === Event.PlaybackQueueEnded) {
         setMusicCard(undefined);
       }
     },
@@ -82,14 +82,14 @@ export default function TrackPlayerOverlay() {
       if (currenTrackIndex) {
         const currentTrack = await TrackPlayer.getTrack(currenTrackIndex);
         if (currentTrack !== undefined) {
-          const { title, artist, artwork, url } = currentTrack!;
+          const {title, artist, artwork, url} = currentTrack!;
           const mc: TrackItem = {
-            title: title || "",
-            artist: artist || "",
-            artworkUrl: artwork?.toString() || "",
-            watchUrl: url.toString() || "",
+            title: title || '',
+            artist: artist || '',
+            artworkUrl: artwork?.toString() || '',
+            watchUrl: url.toString() || '',
           };
-          console.log("trackoverlay ", mc);
+          console.log('trackoverlay ', mc);
           setMusicCard(mc);
         }
       }
@@ -109,19 +109,23 @@ export default function TrackPlayerOverlay() {
           <Icon name="ios-musical-notes-outline" color="white" size={42} />
         </View>
         <View className="w-[60%] overflow-hidden flex flex-col">
-          <TouchableOpacity onPress={
-            () => {
-              navigation?.navigate("PlayerPage")
-            }
-          }>
-            <Text className="text-neutral-100 font-semibold" numberOfLines={1}>{musicCard.title}</Text>
-            <Text className="text-gray-400" numberOfLines={1}>{musicCard.artist}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation?.navigate('PlayerPage');
+            }}>
+            <Text className="text-neutral-100 font-semibold" numberOfLines={1}>
+              {musicCard.title}
+            </Text>
+            <Text className="text-gray-400" numberOfLines={1}>
+              {musicCard.artist}
+            </Text>
           </TouchableOpacity>
         </View>
         <View className="absolute right-0 flex flex-row items-center">
           <TouchableOpacity
-            onPress={() => playbackControls(playbackControlsActions.ActionSkipPrev)}
-          >
+            onPress={() =>
+              playbackControls(playbackControlsActions.ActionSkipPrev)
+            }>
             <Icon name="play-skip-back-sharp" size={28} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -139,8 +143,9 @@ export default function TrackPlayerOverlay() {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => playbackControls(playbackControlsActions.ActionSkip)}
-          >
+            onPress={() =>
+              playbackControls(playbackControlsActions.ActionSkip)
+            }>
             <Icon name="play-skip-forward-sharp" size={28} color="white" />
           </TouchableOpacity>
         </View>

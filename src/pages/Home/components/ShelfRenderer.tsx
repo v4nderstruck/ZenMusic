@@ -1,10 +1,11 @@
-import { FlatList, View } from 'react-native';
-import { Item } from '../../../common/Providers/MusicShelfProvider';
+import React from 'react';
+import {FlatList, View} from 'react-native';
+import {Item} from '../../../common/Providers/MusicShelfProvider';
 import GenericCard from './GenericCard';
 
 export interface ShelfRendererProps {
   shelf: Item[];
-  renderStyle: 'scroll' | 'stack'
+  renderStyle: 'scroll' | 'stack';
 }
 
 function splitArray(array: any[], i: number): any[] {
@@ -29,18 +30,17 @@ export default function ShelfRenderer({
         showsHorizontalScrollIndicator={false}
         data={shelf}
         keyExtractor={(item, _index) => `${item.title}+${item.subtitle}`}
-        renderItem={({ item }) => {
+        renderItem={({item}) => {
           return <GenericCard item={item} />;
         }}
         ItemSeparatorComponent={() => <View className="w-4" />}
       />
     );
   } else if (renderStyle === 'stack') {
-
     const stackedShelf = splitArray(shelf, 4);
     return (
       <FlatList
-        style={{ zIndex: 9 }}
+        style={{zIndex: 9}}
         horizontal
         showsHorizontalScrollIndicator={false}
         data={stackedShelf}
@@ -51,7 +51,7 @@ export default function ShelfRenderer({
             })
             .join('.');
         }}
-        renderItem={({ item, index, separators }) => {
+        renderItem={({item}) => {
           return (
             <View>
               {item.map((value: Item) => {
