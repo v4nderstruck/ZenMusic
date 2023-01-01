@@ -1,5 +1,5 @@
-import store, { RootState } from '../../states/Store';
-import { APIKEY } from '../constants';
+import store, {RootState} from '../../states/Store';
+import {APIKEY} from '../constants';
 import {
   HttpProviderCommon,
   pickGuard,
@@ -72,8 +72,8 @@ function pickMSAction(item: any): ItemAction {
       pickGuard(
         item,
         ['musicTwoRowItemRenderer', 'navigationEndpoint', 'watchEndpoint'],
-        i => true,
-      ) || pickGuard(item, ['musicResponsiveListItemRenderer'], i => true);
+        _i => true,
+      ) || pickGuard(item, ['musicResponsiveListItemRenderer'], _i => true);
     if (videoType) {
       return 'watch';
     }
@@ -130,18 +130,20 @@ function pickMSAction(item: any): ItemAction {
     action: actionType,
     browseId:
       actionType === 'browse'
-        ? pickGuard(
-          item,
-          [
-            'musicTwoRowItemRenderer',
-            'navigationEndpoint',
-            'browseEndpoint',
-            'browseId',
-          ],
-          item => {
-            return typeof item === 'string' || item instanceof String;
-          },
-        ) || ('' as String)
+        ? (
+            pickGuard(
+              item,
+              [
+                'musicTwoRowItemRenderer',
+                'navigationEndpoint',
+                'browseEndpoint',
+                'browseId',
+              ],
+              i => {
+                return typeof i === 'string' || i instanceof String;
+              },
+            ) as String
+          ).slice(2) || ('' as String)
         : ('' as String),
     watchId: actionType === 'watch' ? pickWatchId(item) : ('' as String),
     playlistId: '',

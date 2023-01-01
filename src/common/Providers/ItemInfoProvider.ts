@@ -1,12 +1,16 @@
-import store, { RootState } from "../../states/Store";
-import { APIKEY } from "../constants";
-import { HttpProviderCommon, pickGuard, ProviderContext } from "../ProviderCommon";
+import store, {RootState} from '../../states/Store';
+import {APIKEY} from '../constants';
+import {
+  HttpProviderCommon,
+  pickGuard,
+  ProviderContext,
+} from '../ProviderCommon';
 
 const endpointUrl = `https://music.youtube.com/youtubei/v1/next?key=${APIKEY}&prettyPrint=false`;
 
 const defaultEndpointPayload = {
   isAudioOnly: true,
-  videoId: "",
+  videoId: '',
   context: {
     client: {
       clientName: 'WEB_REMIX',
@@ -16,7 +20,7 @@ const defaultEndpointPayload = {
 };
 
 export interface UpcomingInfo {
-  playlistId: String
+  playlistId: String;
 }
 
 function pickPlaylistId(obj: any): UpcomingInfo | null {
@@ -24,13 +28,14 @@ function pickPlaylistId(obj: any): UpcomingInfo | null {
     const plId: String | null = pickGuard(
       contents,
       [
-        "automixPreviewVideoRenderer",
-        "content",
-        "automixPlaylistVideoRenderer",
-        "navigationEndpoint",
-        "watchPlaylistEndpoint",
-        "playlistId"
-      ], (_i) => true
+        'automixPreviewVideoRenderer',
+        'content',
+        'automixPlaylistVideoRenderer',
+        'navigationEndpoint',
+        'watchPlaylistEndpoint',
+        'playlistId',
+      ],
+      _i => true,
     );
     return plId;
   }
@@ -39,38 +44,42 @@ function pickPlaylistId(obj: any): UpcomingInfo | null {
   const tabs: any[] | null = pickGuard(
     obj,
     [
-      "contents",
-      "singleColumnMusicWatchNextResultsRenderer",
-      "tabbedRenderer",
-      "watchNextTabbedResultsRenderer",
-      "tabs"
-    ], Array.isArray
-  )
-  if (tabs === null)
+      'contents',
+      'singleColumnMusicWatchNextResultsRenderer',
+      'tabbedRenderer',
+      'watchNextTabbedResultsRenderer',
+      'tabs',
+    ],
+    Array.isArray,
+  );
+  if (tabs === null) {
     return null;
+  }
 
   const contents: any[] | null = pickGuard(
     tabs[0],
     [
-      "tabRenderer",
-      "content",
-      "musicQueueRenderer",
-      "content",
-      "playlistPanelRenderer",
-      "contents"
-    ], Array.isArray
+      'tabRenderer',
+      'content',
+      'musicQueueRenderer',
+      'content',
+      'playlistPanelRenderer',
+      'contents',
+    ],
+    Array.isArray,
   );
-  if (contents == null)
+  if (contents == null) {
     return null;
+  }
   const playlistId = internalPickPlaylistId(contents[contents.length - 1]);
-  if (playlistId == null)
+  if (playlistId == null) {
     return null;
+  }
 
   const upcoming: UpcomingInfo = {
-    playlistId: playlistId
-  }
+    playlistId: playlistId,
+  };
   return upcoming;
-
 }
 
 const providerCommon = new HttpProviderCommon(endpointUrl);
@@ -80,8 +89,9 @@ export default {
   },
 
   async fetch(): Promise<UpcomingInfo | null> {
-    if (defaultEndpointPayload.videoId === "")
+    if (defaultEndpointPayload.videoId === '') {
       return null;
+    }
 
     const state: RootState = store.getState();
 
@@ -93,10 +103,10 @@ export default {
 
     try {
       const obj = await providerCommon.fetchEndPoint(ctx);
-      return pickPlaylistId(obj)
+      return pickPlaylistId(obj);
     } catch (e) {
-      console.log("ItemInfoProvider", e);
-      return null
+      console.log('ItemInfoProvider', e);
+      return null;
     }
-  }
-} 
+  },
+};

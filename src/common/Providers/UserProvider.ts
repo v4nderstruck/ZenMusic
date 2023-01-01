@@ -25,7 +25,6 @@ function pickUsername(obj: any): String {
   try {
     var actions: any[] = cherryPick(obj, ['actions'], Array.isArray);
   } catch (e) {
-    console.log(e);
     return '';
   }
 
@@ -44,7 +43,6 @@ function pickUsername(obj: any): String {
       Array.isArray,
     );
   } catch (e) {
-    console.log(e);
     return '';
   }
 
@@ -54,7 +52,6 @@ function pickUsername(obj: any): String {
     });
     return username;
   } catch (e) {
-    console.log(e);
     return '';
   }
 }

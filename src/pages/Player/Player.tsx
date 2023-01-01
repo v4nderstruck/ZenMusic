@@ -1,3 +1,4 @@
+import React from 'react';
 import {SafeAreaView, View} from 'react-native';
 import HeaderBar from './components/HeaderBar';
 import MusicCarousel from './components/MusicCarousel';
