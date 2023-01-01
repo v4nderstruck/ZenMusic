@@ -1,12 +1,7 @@
 import React from 'react';
 import {Slider} from '@miblanchard/react-native-slider';
-import {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import TrackPlayer, {
-  Event,
-  State,
-  useTrackPlayerEvents,
-} from 'react-native-track-player';
+import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -35,25 +30,7 @@ const playbackControls = (controls: playbackControlsActions) => {
 };
 
 export default function PlayerControls() {
-  const [playState, setPlayState] = useState<boolean>();
-  useTrackPlayerEvents([Event.PlaybackState], async event => {
-    if (event.type === Event.PlaybackState) {
-      if (event.state === State.Playing) {
-        setPlayState(true);
-      } else {
-        setPlayState(false);
-      }
-    }
-  });
-  useEffect(() => {
-    const getPlayer = async () => {
-      const currentPlayerState = await TrackPlayer.getState();
-      if (currentPlayerState) {
-        setPlayState(currentPlayerState === State.Playing ? true : false);
-      }
-    };
-    getPlayer();
-  }, []);
+  const playState = usePlaybackState();
 
   return (
     <View className="w-full flex flex-col items-center">
@@ -79,12 +56,12 @@ export default function PlayerControls() {
           <TouchableOpacity
             onPress={() => {
               playbackControls(
-                playState
+                playState === State.Playing
                   ? playbackControlsActions.ActionPause
                   : playbackControlsActions.ActionPlay,
               );
             }}>
-            {playState ? (
+            {playState === State.Playing ? (
               <Icon name="pause" size={42} color="white" />
             ) : (
               <Icon name="play" size={42} color="white" />

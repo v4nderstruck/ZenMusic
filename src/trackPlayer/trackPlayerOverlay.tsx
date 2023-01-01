@@ -1,9 +1,11 @@
+import React from 'react';
 import {NavigationContext} from '@react-navigation/native';
 import {useContext, useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
   State,
+  usePlaybackState,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,7 +42,7 @@ const playbackControls = (controls: playbackControlsActions) => {
 
 export default function TrackPlayerOverlay() {
   const [musicCard, setMusicCard] = useState<TrackItem>();
-  const [playState, setPlayState] = useState(false);
+  const playState = usePlaybackState();
   const navigation = useContext(NavigationContext);
   useTrackPlayerEvents(
     [
@@ -50,9 +52,7 @@ export default function TrackPlayerOverlay() {
       Event.PlaybackQueueEnded,
     ],
     async event => {
-      if (event.type === Event.PlaybackState) {
-        setPlayState(event.state === State.Playing ? true : false);
-      } else if (
+      if (
         event.type === Event.PlaybackTrackChanged &&
         event.nextTrack != null
       ) {
@@ -93,10 +93,6 @@ export default function TrackPlayerOverlay() {
           setMusicCard(mc);
         }
       }
-      const currentPlayerState = await TrackPlayer.getState();
-      if (currentPlayerState) {
-        setPlayState(currentPlayerState == State.Playing ? true : false);
-      }
     };
 
     fetchData();
@@ -131,12 +127,12 @@ export default function TrackPlayerOverlay() {
           <TouchableOpacity
             onPress={() => {
               playbackControls(
-                playState
+                playState === State.Playing
                   ? playbackControlsActions.ActionPause
                   : playbackControlsActions.ActionPlay,
               );
             }}>
-            {playState ? (
+            {playState === State.Playing ? (
               <Icon name="pause" size={36} color="white" />
             ) : (
               <Icon name="play" size={36} color="white" />
