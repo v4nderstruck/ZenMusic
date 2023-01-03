@@ -1,4 +1,5 @@
 /// <reference types="nativewind/types" />
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
 import {Provider} from 'react-redux';
@@ -14,6 +15,7 @@ const App = () => {
 
   (async () => {
     await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({progressUpdateEventInterval: 1});
   })();
 
   return (
