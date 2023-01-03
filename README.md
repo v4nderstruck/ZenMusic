@@ -12,5 +12,7 @@ My personal mobile music streaming app using react native! It's a continuous
 
 ## Preview
 
+<p float="left">
 <img src ="./drafts/home.png" width="250"/>
 <img src ="./drafts/playlist.png" width="250"/>
+</p
