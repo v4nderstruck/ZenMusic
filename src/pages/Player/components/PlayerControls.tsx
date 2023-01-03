@@ -42,9 +42,7 @@ export default function PlayerControls() {
     const fetchData = async () => {
       const index = await TrackPlayer.getCurrentTrack();
       const track = index !== null ? await TrackPlayer.getTrack(index) : null;
-      console.log('init track', index, track);
       if (track) {
-        console.log('init track', track.duration);
         setDuration(track.duration || 0);
       }
     };

@@ -6,7 +6,7 @@ import PlayerControls from './components/PlayerControls';
 
 export default function Player({navigation}: any) {
   return (
-    <SafeAreaView className="w-full h-full bg-neutral-300 dark:bg-black">
+    <SafeAreaView className="w-full h-full bg-black">
       <HeaderBar navigation={navigation} />
       <View className="mt-12 w-full h-[65%]">
         <MusicCarousel />
