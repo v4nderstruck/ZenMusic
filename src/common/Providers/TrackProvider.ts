@@ -52,7 +52,7 @@ function pickArtwork(obj: any): string {
   if (!tb) {
     return '';
   }
-  return tb[2].url as string;
+  return (tb[2].url as string) || (tb[1] as string) || (tb[0] as string);
 }
 
 const providerCommon = new HttpProviderCommon(INFO_API_ENDPOINT);

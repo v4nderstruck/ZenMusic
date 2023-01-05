@@ -19,8 +19,9 @@ interface PlaylistItem {
 
 export default function Playlist() {
   const [playlist, setPlaylist] = useState<PlaylistItem[]>([]);
-
+  const [render, setRender] = useState<number>(0);
   useEffect(() => {
+    console.log('Render hash', render);
     const fetchData = async () => {
       const tracks = await TrackPlayer.getQueue();
       const currentTrack = await TrackPlayer.getCurrentTrack();
@@ -35,10 +36,10 @@ export default function Playlist() {
           artwork: item.artwork?.toString() || '',
         });
       });
-      setPlaylist(tPlaylist);
+      setPlaylist([...tPlaylist]);
     };
     fetchData();
-  }, []);
+  }, [render]);
 
   useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
     if (
@@ -55,7 +56,7 @@ export default function Playlist() {
   });
   return (
     <SafeAreaView className="w-full h-full bg-black">
-      <Header />
+      <Header triggerRender={setRender} />
       <View className="h-4" />
       <FlatList
         extraData={playlist}

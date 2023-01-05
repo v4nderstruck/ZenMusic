@@ -37,7 +37,7 @@ function clickHandler(item: Item, navigation: any) {
       PlaylistProvider.setPlaylistId(
         upcoming?.playlistId || item.action.browseId,
       );
-      const playlistItems = await PlaylistProvider.fetch();
+      const playlistItems = await PlaylistProvider.fetch('');
       for (const p of playlistItems.items) {
         const track = await TrackProvider.fetch(p);
         if (track) {

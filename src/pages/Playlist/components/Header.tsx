@@ -9,12 +9,33 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
+import PlaylistProvider from '../../../common/Providers/PlaylistProvider';
+import TrackProvider from '../../../common/Providers/TrackProvider';
 
-export default function Header() {
+export interface HeaderProps {
+  triggerRender: (arg0: any) => void;
+}
+export default function Header({triggerRender}: HeaderProps) {
   const [nextTrack, setNextTrack] = useState<Track | null>(null);
   const [queueLength, setQueueLength] = useState<number>(0);
   const navigation = useContext(NavigationContext);
 
+  const loadMoreHandler = () => {
+    const fch = async () => {
+      console.log('hander activated');
+      let r = (Math.random() + 1).toString(36).substring(2);
+      const playlistItems = await PlaylistProvider.fetch(r);
+      console.log(playlistItems);
+      for (const p of playlistItems.items) {
+        const track = await TrackProvider.fetch(p);
+        if (track) {
+          await TrackPlayer.add([track]);
+        }
+      }
+      triggerRender(Math.random());
+    };
+    fch();
+  };
   useEffect(() => {
     const fetchData = async () => {
       const current = await TrackPlayer.getCurrentTrack();
@@ -51,7 +72,9 @@ export default function Header() {
         <View className="grow flex flex-col">
           <View className="relative flex flex-row items-center">
             <Text className="text-gray-300 font-thin">{queueLength} Songs</Text>
-            <TouchableOpacity className="ml-4 grow flex flex-row items-center justify-end">
+            <TouchableOpacity
+              className="ml-6 grow flex flex-row items-center"
+              onPress={loadMoreHandler}>
               <Text className="text-gray-300 font-thin">More</Text>
               <Icon name="ellipsis-vertical" color="gray" size={14} />
             </TouchableOpacity>
