@@ -7,8 +7,14 @@ My personal mobile music streaming app using react native! It's a continuous
 
 - [x] Intelligent & Personalized feed based on Youtube
 - [x] Stream songs
-- [ ] Endless music playlist
-- [ ] Search & Browse music 
+- [x] Endless music radio
+- [x] Search music 
+
+## UpcomingFeatures
+
+- [ ] Browse artists
+- [ ] Explore new music
+- [ ] Personal playlists
 
 ## Preview
 
