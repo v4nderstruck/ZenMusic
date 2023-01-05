@@ -1,7 +1,9 @@
-import React from 'react';
+import {NavigationContext} from '@react-navigation/native';
+import React, {useContext} from 'react';
 import {useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
+import SearchProvider from '../../../common/Providers/SearchProvider';
 import SearchSuggestionProvider from '../../../common/Providers/SearchSuggestionProvider';
 
 const autocompleteStyles = StyleSheet.create({
@@ -23,8 +25,6 @@ const autocompleteStyles = StyleSheet.create({
   },
 });
 
-const selectItemHandler = (_item: any) => {};
-
 const submitHandler = ({_nativeEvent}: any) => {};
 
 interface Suggestion {
@@ -34,9 +34,20 @@ interface Suggestion {
 
 export default function QuickSearch() {
   const [suggestionList, setSuggestionList] = useState<Suggestion[]>([]);
+  const navigation = useContext(NavigationContext);
+  const selectItemHandler = (item: any) => {
+    const fetchSearch = async () => {
+      const search = await SearchProvider.fetch(item.id);
+      if (search == null) {
+        return;
+      }
+      navigation?.navigate('SearchPage', {search});
+    };
+    fetchSearch();
+  };
+
   const inputChangeHandler = async (input: string) => {
     const suggestions = await SearchSuggestionProvider.fetch(input);
-    console.log(suggestions);
     const set = suggestions.map(item => {
       return {
         id: item.query,

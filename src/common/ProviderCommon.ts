@@ -29,7 +29,9 @@ export function cherryPick<Type>(
       pObj = pObj[selector as string];
     } else {
       //console.log("Err: ", pObj, `Selector tree [${selectors}]`);
-      throw new Error(`PickError: Field ${selector} does not exists.`);
+      throw new Error(
+        `PickError: Field ${selector} does not exists. Selectors: ${selectors}`,
+      );
     }
 
     if (i == selectors.length - 1) {

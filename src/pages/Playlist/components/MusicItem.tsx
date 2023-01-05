@@ -63,8 +63,10 @@ export default function MusicItem({
         )}
       </View>
       <View className="flex flex-col">
-        <Text className="text-gray-50 font-bold">{title}</Text>
-        <Text className="text-gray-200">
+        <Text numberOfLines={1} className="text-gray-50 font-bold">
+          {title}
+        </Text>
+        <Text numberOfLines={1} className="text-gray-200">
           {artist} • {toTimeFormat(duration)}
         </Text>
       </View>
