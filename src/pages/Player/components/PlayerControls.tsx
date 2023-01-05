@@ -1,14 +1,15 @@
-import React from 'react';
-import {Slider} from '@miblanchard/react-native-slider';
-import {useEffect, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
   State,
+  usePlaybackState,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import PlayerProgress from './PlayerProgress';
 
 enum playbackControlsActions {
   ActionPlay,
@@ -35,35 +36,35 @@ const playbackControls = (controls: playbackControlsActions) => {
 };
 
 export default function PlayerControls() {
-  const [playState, setPlayState] = useState<boolean>();
-  useTrackPlayerEvents([Event.PlaybackState], async event => {
-    if (event.type === Event.PlaybackState) {
-      if (event.state === State.Playing) {
-        setPlayState(true);
-      } else {
-        setPlayState(false);
-      }
-    }
-  });
+  const playState = usePlaybackState();
+  const [duration, setDuration] = useState(0);
   useEffect(() => {
-    const getPlayer = async () => {
-      const currentPlayerState = await TrackPlayer.getState();
-      if (currentPlayerState) {
-        setPlayState(currentPlayerState === State.Playing ? true : false);
+    const fetchData = async () => {
+      const index = await TrackPlayer.getCurrentTrack();
+      const track = index !== null ? await TrackPlayer.getTrack(index) : null;
+      if (track) {
+        setDuration(track.duration || 0);
       }
     };
-    getPlayer();
+    fetchData();
   }, []);
-
+  useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
+    if (
+      event.type === Event.PlaybackTrackChanged &&
+      event.nextTrack != null &&
+      event.nextTrack !== undefined
+    ) {
+      const track = await TrackPlayer.getTrack(event.nextTrack);
+      const trackDuration = track
+        ? track.duration || Number.MAX_VALUE
+        : Number.MAX_VALUE;
+      setDuration(trackDuration);
+    }
+  });
   return (
     <View className="w-full flex flex-col items-center">
-      <View className="w-[90%] items-stretch">
-        <Slider
-          value={20}
-          trackStyle={{
-            backgroundColor: 'white',
-          }}
-        />
+      <View className="w-[90%] flex items-stretch">
+        <PlayerProgress duration={duration} />
       </View>
       <View className="mt-6 w-[90%] flex flex-row justify-between">
         <TouchableOpacity>
@@ -79,12 +80,12 @@ export default function PlayerControls() {
           <TouchableOpacity
             onPress={() => {
               playbackControls(
-                playState
+                playState === State.Playing
                   ? playbackControlsActions.ActionPause
                   : playbackControlsActions.ActionPlay,
               );
             }}>
-            {playState ? (
+            {playState === State.Playing ? (
               <Icon name="pause" size={42} color="white" />
             ) : (
               <Icon name="play" size={42} color="white" />

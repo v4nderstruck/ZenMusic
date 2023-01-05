@@ -1,12 +1,18 @@
+/* eslint-disable react-native/no-inline-styles */
+import React from 'react';
 import {NavigationContext} from '@react-navigation/native';
 import {useContext, useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import TrackPlayer, {
   Event,
   State,
+  usePlaybackState,
+  useProgress,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
+import TrackProgress from './TrackProgress';
+import FastImage from 'react-native-fast-image';
 
 interface TrackItem {
   title: String;
@@ -40,8 +46,11 @@ const playbackControls = (controls: playbackControlsActions) => {
 
 export default function TrackPlayerOverlay() {
   const [musicCard, setMusicCard] = useState<TrackItem>();
-  const [playState, setPlayState] = useState(false);
+  const playState = usePlaybackState();
+  const [duration, setDuration] = useState(0);
+  const progress = useProgress();
   const navigation = useContext(NavigationContext);
+
   useTrackPlayerEvents(
     [
       Event.PlaybackTrackChanged,
@@ -50,22 +59,20 @@ export default function TrackPlayerOverlay() {
       Event.PlaybackQueueEnded,
     ],
     async event => {
-      if (event.type === Event.PlaybackState) {
-        setPlayState(event.state === State.Playing ? true : false);
-      } else if (
+      if (
         event.type === Event.PlaybackTrackChanged &&
         event.nextTrack != null
       ) {
         const currentTrack = await TrackPlayer.getTrack(event.nextTrack);
-        if (currentTrack !== undefined) {
-          const {title, artist, artwork, url} = currentTrack!;
+        if (currentTrack) {
+          const {title, artist, artwork, url} = currentTrack;
           const mc: TrackItem = {
             title: title || '',
             artist: artist || '',
             artworkUrl: artwork?.toString() || '',
             watchUrl: url.toString() || '',
           };
-          console.log('trackoverlay ', mc);
+          setDuration(currentTrack.duration || Number.MAX_VALUE);
           setMusicCard(mc);
         }
       } else if (event.type === Event.PlaybackError) {
@@ -79,75 +86,79 @@ export default function TrackPlayerOverlay() {
   useEffect(() => {
     const fetchData = async () => {
       const currenTrackIndex = await TrackPlayer.getCurrentTrack();
-      if (currenTrackIndex) {
-        const currentTrack = await TrackPlayer.getTrack(currenTrackIndex);
-        if (currentTrack !== undefined) {
-          const {title, artist, artwork, url} = currentTrack!;
-          const mc: TrackItem = {
-            title: title || '',
-            artist: artist || '',
-            artworkUrl: artwork?.toString() || '',
-            watchUrl: url.toString() || '',
-          };
-          console.log('trackoverlay ', mc);
-          setMusicCard(mc);
-        }
-      }
-      const currentPlayerState = await TrackPlayer.getState();
-      if (currentPlayerState) {
-        setPlayState(currentPlayerState == State.Playing ? true : false);
+      const currentTrack =
+        currenTrackIndex !== null
+          ? await TrackPlayer.getTrack(currenTrackIndex)
+          : null;
+      if (currentTrack) {
+        const {title, artist, artwork, url} = currentTrack;
+        const mc: TrackItem = {
+          title: title || '',
+          artist: artist || '',
+          artworkUrl: artwork?.toString() || '',
+          watchUrl: url.toString() || '',
+        };
+        setDuration(currentTrack.duration || Number.MAX_VALUE);
+        setMusicCard(mc);
       }
     };
-
     fetchData();
   }, []); // again, because of mounting
 
   if (musicCard) {
     return (
-      <View className="flex flex-row gap-2 items-center w-full">
-        <View>
-          <Icon name="ios-musical-notes-outline" color="white" size={42} />
-        </View>
-        <View className="w-[60%] overflow-hidden flex flex-col">
-          <TouchableOpacity
-            onPress={() => {
-              navigation?.navigate('PlayerPage');
-            }}>
-            <Text className="text-neutral-100 font-semibold" numberOfLines={1}>
-              {musicCard.title}
-            </Text>
-            <Text className="text-gray-400" numberOfLines={1}>
-              {musicCard.artist}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="absolute right-0 flex flex-row items-center">
-          <TouchableOpacity
-            onPress={() =>
-              playbackControls(playbackControlsActions.ActionSkipPrev)
-            }>
-            <Icon name="play-skip-back-sharp" size={28} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              playbackControls(
-                playState
-                  ? playbackControlsActions.ActionPause
-                  : playbackControlsActions.ActionPlay,
-              );
-            }}>
-            {playState ? (
-              <Icon name="pause" size={36} color="white" />
-            ) : (
-              <Icon name="play" size={36} color="white" />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              playbackControls(playbackControlsActions.ActionSkip)
-            }>
-            <Icon name="play-skip-forward-sharp" size={28} color="white" />
-          </TouchableOpacity>
+      <View className="flex flex-col w-full">
+        <TrackProgress progress={progress.position} max={duration} />
+        <View className="flex flex-row gap-2 items-center w-full">
+          <View>
+            <FastImage
+              source={{uri: `${musicCard.artworkUrl}`}}
+              style={{width: 42, height: 42}}
+            />
+          </View>
+          <View className="w-[60%] overflow-hidden flex flex-col">
+            <TouchableOpacity
+              onPress={() => {
+                navigation?.navigate('PlayerPage');
+              }}>
+              <Text
+                className="text-neutral-100 font-semibold"
+                numberOfLines={1}>
+                {musicCard.title}
+              </Text>
+              <Text className="text-gray-400" numberOfLines={1}>
+                {musicCard.artist}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View className="absolute right-0 flex flex-row items-center">
+            <TouchableOpacity
+              onPress={() =>
+                playbackControls(playbackControlsActions.ActionSkipPrev)
+              }>
+              <Icon name="play-skip-back-sharp" size={28} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                playbackControls(
+                  playState === State.Playing
+                    ? playbackControlsActions.ActionPause
+                    : playbackControlsActions.ActionPlay,
+                );
+              }}>
+              {playState === State.Playing ? (
+                <Icon name="pause" size={36} color="white" />
+              ) : (
+                <Icon name="play" size={36} color="white" />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                playbackControls(playbackControlsActions.ActionSkip)
+              }>
+              <Icon name="play-skip-forward-sharp" size={28} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );

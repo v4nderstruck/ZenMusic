@@ -3,7 +3,7 @@ import {NavigationContext} from '@react-navigation/native';
 import {useContext} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import TrackPlayer, {Track} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 import ItemInfoProvider from '../../../common/Providers/ItemInfoProvider';
 import {Item} from '../../../common/Providers/MusicShelfProvider';
 import PlaylistProvider from '../../../common/Providers/PlaylistProvider';
@@ -16,36 +16,38 @@ export interface GenericCardProps {
 
 function clickHandler(item: Item, navigation: any) {
   (async () => {
+    navigation.navigate('PlayerPage');
     try {
+      let playGo = true;
       await TrackPlayer.reset();
-      const playlist: Track[] = [];
       let upcoming = null;
       if (item.action.action === 'watch') {
         ItemInfoProvider.setWatchId(item.action.watchId as string);
         upcoming = await ItemInfoProvider.fetch();
         if (upcoming !== null) {
-          console.log('CLICK_HANDLER no playlist id Found');
-          const trackItem = TrackProvider.provide(item);
+          const trackItem = await TrackProvider.fetch(item);
           if (trackItem == null) {
             return;
           }
           await TrackPlayer.add([trackItem]);
           await TrackPlayer.play();
+          playGo = false;
         }
       }
       PlaylistProvider.setPlaylistId(
         upcoming?.playlistId || item.action.browseId,
       );
-      const playlistItems = await PlaylistProvider.fetch();
+      const playlistItems = await PlaylistProvider.fetch('');
       for (const p of playlistItems.items) {
-        const track = TrackProvider.provide(p);
+        const track = await TrackProvider.fetch(p);
         if (track) {
-          playlist.push(track);
+          await TrackPlayer.add([track]);
+          if (playGo) {
+            await TrackPlayer.play();
+            playGo = false;
+          }
         }
       }
-      await TrackPlayer.add(playlist);
-      await TrackPlayer.play();
-      navigation.navigate('PlayerPage');
       return;
     } catch (e) {
       console.log('Click handler ', e);

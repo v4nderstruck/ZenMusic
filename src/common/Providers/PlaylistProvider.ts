@@ -12,6 +12,7 @@ const endpointUrl = `https://music.youtube.com/youtubei/v1/next?key=${APIKEY}&pr
 const defaultEndpointPayload = {
   isAudioOnly: true,
   playlistId: '',
+  continuation: '',
   context: {
     client: {
       clientName: 'WEB_REMIX',
@@ -138,7 +139,9 @@ export default {
     defaultEndpointPayload.playlistId = id as string;
   },
 
-  async fetch(): Promise<Playlist> {
+  // seems take ctoken can simply a random string?
+  async fetch(ctoken: string): Promise<Playlist> {
+    defaultEndpointPayload.continuation = ctoken;
     if (defaultEndpointPayload.playlistId === '') {
       return {items: []};
     }

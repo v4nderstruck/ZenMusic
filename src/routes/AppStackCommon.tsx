@@ -1,5 +1,7 @@
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Player from '../pages/Player/Player';
+import Playlist from '../pages/Playlist/Playlist';
 
 const AppStackNav = createNativeStackNavigator();
 
@@ -15,6 +17,7 @@ export default function AppStackCommon(props: AppStackProps) {
       }}>
       <AppStackNav.Screen name="MainPage" component={props.main} />
       <AppStackNav.Screen name="PlayerPage" component={Player} />
+      <AppStackNav.Screen name="PlaylistPage" component={Playlist} />
     </AppStackNav.Navigator>
   );
 }

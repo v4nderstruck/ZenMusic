@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <SafeAreaView className="w-full h-full bg-black">
       <View className="w-full h-full bg-black">
-        <View className="absolute bottom-0 left-0 bg-black pt-2 w-full z-10">
+        <View className="absolute bottom-0 left-0 bg-black w-full z-10">
           <TrackPlayerOverlay />
         </View>
         <FlatList

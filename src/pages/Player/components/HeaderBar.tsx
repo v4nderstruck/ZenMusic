@@ -14,7 +14,9 @@ export default function HeaderBar({navigation}: HeaderBarProps) {
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Icon name="chevron-back-outline" size={42} color="white" />
       </TouchableOpacity>
-      <TouchableOpacity className="mr-3">
+      <TouchableOpacity
+        className="mr-3"
+        onPress={() => navigation.navigate('PlaylistPage')}>
         <MaterialIcon name="playlist-play" size={42} color="white" />
       </TouchableOpacity>
     </View>
