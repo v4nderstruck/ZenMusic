@@ -7,7 +7,7 @@ import {
 } from '../ProviderCommon';
 import {Item} from './MusicShelfProvider';
 
-const MUSIC_API_ENDPOINT = 'https://invidio.xamh.de/latest_version';
+const MUSIC_API_ENDPOINT = 'https://watch.thekitty.zone/latest_version';
 const ITAG = 140;
 const INFO_API_ENDPOINT =
   'https://music.youtube.com/youtubei/v1/player?key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30&prettyPrint=false';
